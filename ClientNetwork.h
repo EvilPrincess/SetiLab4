@@ -4,7 +4,6 @@
 #include "base.h"
 #include "INetwork.h"
 
-
 #define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "6881"
 #pragma comment (lib, "Ws2_32.lib")
