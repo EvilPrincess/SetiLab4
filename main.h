@@ -1,6 +1,7 @@
 #pragma once
 
 #include "base.h"
+#include "INetwork.h"
 
 #define MAIN_WC L"MainWndClass"
 
