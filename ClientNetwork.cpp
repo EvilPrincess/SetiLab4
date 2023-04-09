@@ -1,9 +1,12 @@
 #include "ClientNetwork.h"
 
+
 //
 //		GLOBAL VARIABLES
 //
 extern HWND MainWnd;
+
+
 
 ClientNetwork::ClientNetwork()
 {

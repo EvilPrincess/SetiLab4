@@ -1,6 +1,12 @@
 #include "ServerNetwork.h"
 
+
+//
+//		GLOBAL VARIABLES
+//
 extern HWND MainWnd;
+
+
 
 ServerNetwork::ServerNetwork(void)
 {
