@@ -12,13 +12,13 @@ HWND MainWnd = { };
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdshow) {
 
 	WNDCLASS MainWndClass = NewWindowClass((HBRUSH)COLOR_WINDOW, LoadCursor(NULL, IDC_ARROW), hInst,
-		LoadIcon(NULL, IDI_QUESTION), L"MainWndClass", MainWndProc);
+		LoadIcon(NULL, IDI_QUESTION), MAIN_WC, MainWndProc);
 
 	if (!RegisterClassW(&MainWndClass)) { return -1; }
 
 	MSG MainWndMessage = { };
 
-	MainWnd = CreateWindow(L"MainWndClass", L"My Dumb Program 2.0", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_VISIBLE, 100, 100, 1600, 900, NULL, NULL, NULL, NULL);
+	MainWnd = CreateWindow(MAIN_WC, L"Так называемый почтовый сервер", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_VISIBLE, 100, 100, 1200, 700, NULL, NULL, NULL, NULL);
 	while (GetMessage(&MainWndMessage, NULL, NULL, NULL)) {
 		TranslateMessage(&MainWndMessage);
 		DispatchMessage(&MainWndMessage);
