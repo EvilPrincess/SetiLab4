@@ -78,7 +78,6 @@ ServerNetwork::ServerNetwork(void)
         PostQuitMessage(0);
     }
 }
-
 BOOL ServerNetwork::AcceptNewClient(UINT& id)
 {
     ClientSocket = accept(ListenSocket, NULL, NULL);

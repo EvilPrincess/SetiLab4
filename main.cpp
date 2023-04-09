@@ -6,7 +6,8 @@ using namespace std;
 //		GLOBAL VARIABLES
 //
 HWND MainWnd = { };
-
+SN* server;
+CN* client;
 
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdshow) {
@@ -46,6 +47,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		case WM_CREATE:
 		{
+			OnMainWindowCreated(hWnd, uMsg, wParam, lParam);
 			break;
 		}
 		case WM_CLOSE:
@@ -71,5 +73,29 @@ LRESULT CommandHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		default:
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);
+	}
+}
+
+void OnMainWindowCreated(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	server = new SN();
+	client = new CN();
+	_beginthread(ServerLoop, 0, (void*)12);
+	ClientLoop();
+}
+
+void serverLoop(void* arg)
+{
+	while (true)
+	{
+		server->update();
+	}
+}
+
+void clientLoop()
+{
+	while (true)
+	{
+		
 	}
 }

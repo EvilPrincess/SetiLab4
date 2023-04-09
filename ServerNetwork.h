@@ -1,7 +1,6 @@
 #pragma once
 
 #include "base.h"
-#include "INetwork.h"
 
 class ServerNetwork
 {

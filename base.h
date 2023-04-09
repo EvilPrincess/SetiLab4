@@ -5,6 +5,7 @@
 #include <WS2tcpip.h>
 #include <string>
 #include <map>
+#include <process.h>
 
 #pragma comment (lib, "Ws2_32.lib")
 #pragma comment (lib, "Mswsock.lib")
