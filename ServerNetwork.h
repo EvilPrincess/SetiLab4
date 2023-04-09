@@ -8,7 +8,8 @@ class ServerNetwork
 private:
 public:
 	ServerNetwork();
-	~ServerNetwork();
+	BOOL AcceptNewClient(UINT& id);
+
 	SOCKET ListenSocket;
 	SOCKET ClientSocket;
 	INT iResult;

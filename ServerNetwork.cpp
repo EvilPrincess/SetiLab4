@@ -72,3 +72,20 @@ ServerNetwork::ServerNetwork(void)
         PostQuitMessage(0);
     }
 }
+
+BOOL ServerNetwork::AcceptNewClient(UINT& id)
+{
+    ClientSocket = accept(ListenSocket, NULL, NULL);
+
+    if (ClientSocket != INVALID_SOCKET)
+    {
+        char value = 1;
+        setsockopt(ClientSocket, IPPROTO_TCP, TCP_NODELAY, &value, sizeof(value));
+
+        sessions.insert(pair<unsigned int, SOCKET>(id, ClientSocket));
+
+        return true;
+    }
+
+    return false;
+}
