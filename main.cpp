@@ -8,7 +8,7 @@ HWND EditBox = { };
 HWND StartBtn = { };
 HWND StopBtn = { };
 HANDLE ServerThread = { };
-BOOL running = TRUE;
+BOOL running = FALSE;
 CHAR BUFFER[BUFFERSIZE] = { };
 
 
@@ -53,11 +53,6 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			PostQuitMessage(0);
 			break;
 		}
-		case WM_PAINT:
-		{
-			/*DrawServer(hWnd);*/
-			break;
-		}
 		case WM_COMMAND:
 		{
 			return CommandHandler(hWnd, uMsg, wParam, lParam);
@@ -67,6 +62,11 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{
 			OnResize(hWnd);
 			return 0;
+		}
+		case WM_MOVE:
+		{
+			OnResize(hWnd);
+			break;
 		}
 		default:
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);
@@ -88,6 +88,9 @@ inline void DrawServer(HWND hWnd)
 	HDC hDC;
 	RECT r;
 
+	InvalidateRect(hWnd, NULL, TRUE);
+	UpdateWindow(hWnd);
+
 	hDC = GetDC(hWnd);
 	GetClientRect(hWnd, &r);
 
@@ -99,7 +102,16 @@ LRESULT CommandHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (wParam)
 	{
-
+		case OnStartPressed:
+		{
+			Init();
+			break;
+		}
+		case OnStopPressed:
+		{
+			Stop();
+			break;
+		}
 		default:
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);
 	}
@@ -149,6 +161,9 @@ DWORD WINAPI ServerHandler(LPVOID lpParam)
 		MB(to_string(WSAGetLastError()).c_str(), MB_OK | MB_ICONERROR);
 		return 1;
 	}
+
+	DM("Успешное создание сервера!");
+
 	if ((listen(sListen, SOMAXCONN)) == SOCKET_ERROR)
 	{
 		MB("ащипка прослушивания", MB_OK | MB_ICONERROR);
@@ -157,12 +172,13 @@ DWORD WINAPI ServerHandler(LPVOID lpParam)
 
 	SOCKET newConnection;
 
-	DM("Waiting for new connections...");
+	DM("Ожидание клиентов...");
 
 	return 1;
 }
 void Init()
 {
+	if (running) return;
 	WSADATA WSAdata;
 	WORD DLLVersion = MAKEWORD(2, 1);
 	if (WSAStartup(DLLVersion, &WSAdata) != 0)
@@ -170,6 +186,7 @@ void Init()
 		MB("no wsa cry :(");
 		PostQuitMessage(0);
 	}
+	running = TRUE;
 	ServerThread = CreateThread(
 		NULL,
 		0,
