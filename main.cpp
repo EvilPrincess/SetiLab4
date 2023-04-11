@@ -96,8 +96,8 @@ inline void DrawClient(HWND hWnd)
 	HDC hDC;
 	RECT r;
 
-	/*InvalidateRect(hWnd, NULL, TRUE);
-	UpdateWindow(hWnd);*/
+	InvalidateRect(hWnd, NULL, TRUE);
+	UpdateWindow(hWnd);
 
 	hDC = GetDC(hWnd);
 	GetClientRect(hWnd, &r);
@@ -235,6 +235,7 @@ void Exit()
 {
 	if (!running) return;
 	running = FALSE;
+	closesocket(client);
 	if (WSACleanup() == SOCKET_ERROR)
 	{
 		MB("Ошибка функции WSACleanup", MB_OK | MB_ICONERROR);
