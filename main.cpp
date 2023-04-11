@@ -191,7 +191,13 @@ DWORD WINAPI ServerHandler(LPVOID lpParam)
 		DM("Клиент присоединился!");
 	}
 
-	
+	CreateThread(
+		NULL,
+		0,
+		ReceiveProc,
+		(LPVOID)RECEIVE_T,
+		0,
+		NULL);
 
 	return 1;
 }
@@ -210,7 +216,7 @@ void Init()
 		NULL,
 		0,
 		ServerHandler,
-		SERVER_T,
+		(LPVOID)SERVER_T,
 		0,
 		NULL);
 }
@@ -228,9 +234,16 @@ void Stop()
 	}
 }
 
-DWORD WINAPI RecieveProc(LPVOID lpParam)
+DWORD WINAPI ReceiveProc(LPVOID lpParam)
 {
 	char buffer[256];
-	recv(client, buffer, sizeof(buffer), NULL);
-	DM(buffer);
+	while(true)
+	{
+		if (recv(client, buffer, sizeof(buffer), NULL) == 0)
+		{
+			DM("Клиент отключился. Очень жаль...");
+			return 1;
+		}
+		DM(buffer);
+	}
 }
