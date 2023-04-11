@@ -173,7 +173,7 @@ DWORD WINAPI ServerHandler(LPVOID lpParam)
 		MB("Ошибка функции bind: " + to_string(WSAGetLastError()), TRUE);
 		return 1;
 	}
-	DM("Успешное создание сервера!");
+	DM("$ Успешное создание сервера!");
 
 	if ((listen(server, SOMAXCONN)) == SOCKET_ERROR)
 	{
@@ -181,7 +181,7 @@ DWORD WINAPI ServerHandler(LPVOID lpParam)
 		return 1;
 	}
 	
-	DM("Ожидание клиентов...");
+	DM("$ Ожидание клиентов...");
 	CreateThread(
 		NULL,
 		0,
@@ -220,11 +220,11 @@ void Stop()
 	closesocket(server);
 	if (WSACleanup() == SOCKET_ERROR)
 	{
-		MB("Ошибка функции WSACleanup", MB_OK | MB_ICONERROR);
+		MB("Ошибка функции WSACleanup", TRUE);
 	}
 	else
 	{
-		DM("Сервер отключен.");
+		DM("$ Сервер отключен.");
 	}
 }
 
@@ -236,10 +236,10 @@ DWORD WINAPI ReceiveProc(LPVOID lpParam)
 		recv(client, buffer, sizeof(buffer), NULL);
 		if (string(buffer) == "$ disconnect")
 		{
-			DM("Клиент отключился. Очень жаль...");
+			DM("$ Клиент отключился. Очень жаль...");
 			return 1;
 		}
-		DM(buffer);
+		DM("> " + string(buffer));
 	}
 }
 DWORD WINAPI AcceptProc(LPVOID lpParam)
@@ -252,7 +252,7 @@ DWORD WINAPI AcceptProc(LPVOID lpParam)
 		}
 		else
 		{
-			DM("Клиент присоединился!");
+			DM("$ Клиент присоединился!");
 		}
 
 		receiving = TRUE;
