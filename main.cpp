@@ -235,6 +235,8 @@ void Exit()
 {
 	if (!running) return;
 	running = FALSE;
+	char buf[] = "$ disconnect";
+	send(client, buf, sizeof(buf), NULL);
 	closesocket(client);
 	if (WSACleanup() == SOCKET_ERROR)
 	{
