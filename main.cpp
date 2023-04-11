@@ -82,6 +82,8 @@ inline void ResizeWindows(HWND hWnd)
 	RECT r;
 	GetClientRect(hWnd, &r);
 	MoveWindow(EditBox, 11, 11, r.right - 32, r.bottom - 112, TRUE);
+	MoveWindow(StartBtn, 10, r.bottom - 90, r.right / 2 - 20, 80, TRUE);
+	MoveWindow(StopBtn, r.right / 2, r.bottom - 90, r.right / 2 - 20, 80, TRUE);
 }
 inline void DrawServer(HWND hWnd)
 {
@@ -197,6 +199,14 @@ void Init()
 }
 void Stop()
 {
+	if (!running) return;
 	running = FALSE;
-	WSACleanup();
+	if (WSACleanup() == SOCKET_ERROR)
+	{
+		MB("Ошибка функции WSACleanup", MB_OK | MB_ICONERROR);
+	}
+	else
+	{
+		DM("Сервер отключен.");
+	}
 }
