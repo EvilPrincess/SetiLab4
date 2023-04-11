@@ -84,9 +84,22 @@ DWORD WINAPI ServerHandler(LPVOID lpParam)
 	addr.sin_port = htons(DEFAULT_PORT);
 	addr.sin_family = AF_INET;
 
-	SOCKET sListen = socket(AF_INET, SOCK_STREAM, NULL);
-	bind(sListen, (SOCKADDR*)&addr, sizeof(addr));
-	listen(sListen, SOMAXCONN);
+	SOCKET sListen;
+	if ((sListen = socket(AF_INET, SOCK_STREAM, NULL)) == SOCKET_ERROR)
+	{
+		MB("ащипка создания сокета", "\r\n", MB_OK | MB_ICONERROR);
+		return 1;
+	}
+	if ((bind(sListen, (SOCKADDR*)&addr, sizeof(addr))) == SOCKET_ERROR)
+	{
+		MB(to_string(WSAGetLastError()).c_str(), "\r\n", MB_OK | MB_ICONERROR);
+		return 1;
+	}
+	if ((listen(sListen, SOMAXCONN)) == SOCKET_ERROR)
+	{
+		MB("ащипка прослушивания", "\r\n", MB_OK | MB_ICONERROR);
+		return 1;
+	}
 
 	SOCKET newConnection;
 
