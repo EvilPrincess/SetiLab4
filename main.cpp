@@ -10,7 +10,7 @@ HWND StopBtn = { };
 HANDLE ServerThread = { };
 BOOL running = FALSE;
 CHAR BUFFER[BUFFERSIZE] = { };
-SOCKET client;
+SOCKET server, client;
 
 
 //
@@ -25,7 +25,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
 
 	MSG MainWndMessage = { };
 
-	MainWnd = CreateWindow(MAIN_WC, L"Так называемый почтовый сервер", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 100, 100, 1200, 700, NULL, NULL, NULL, NULL);
+	MainWnd = CreateWindow(MAIN_WC, L"Так называемый почтовый сервер", WS_CLIPCHILDREN | WS_OVERLAPPEDWINDOW | WS_VISIBLE, 100, 100, 1200, 700, NULL, NULL, NULL, NULL);
 	while (GetMessage(&MainWndMessage, NULL, NULL, NULL)) {
 		TranslateMessage(&MainWndMessage);
 		DispatchMessage(&MainWndMessage);
@@ -162,7 +162,6 @@ DWORD WINAPI ServerHandler(LPVOID lpParam)
 	addr.sin_port = htons(DEFAULT_PORT);
 	addr.sin_family = AF_INET;
 
-	SOCKET server;
 	if ((server = socket(AF_INET, SOCK_STREAM, NULL)) == SOCKET_ERROR)
 	{
 		MB("Ошибка функции socket: " + to_string(WSAGetLastError()), TRUE);
@@ -224,6 +223,8 @@ void Stop()
 {
 	if (!running) return;
 	running = FALSE;
+	closesocket(client);
+	closesocket(server);
 	if (WSACleanup() == SOCKET_ERROR)
 	{
 		MB("Ошибка функции WSACleanup", MB_OK | MB_ICONERROR);
@@ -237,11 +238,12 @@ void Stop()
 DWORD WINAPI ReceiveProc(LPVOID lpParam)
 {
 	char buffer[256];
-	while(true)
+	while(running)
 	{
 		if (recv(client, buffer, sizeof(buffer), NULL) == 0)
 		{
 			DM("Клиент отключился. Очень жаль...");
+			running = FALSE;
 			return 1;
 		}
 		DM(buffer);
