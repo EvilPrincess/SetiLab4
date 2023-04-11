@@ -208,7 +208,7 @@ DWORD WINAPI ClientHandler(LPVOID lpParam)
 		MB("Ошибка функции connect: " + to_string(WSAGetLastError()), TRUE);
 		return 1;
 	}
-	DM("Успешное подключение к серверу!");
+	DM("$ Успешное подключение к серверу!");
 
 	return 1;
 }
@@ -244,13 +244,15 @@ void Exit()
 	}
 	else
 	{
-		DM("Соединение разорвано.");
+		DM("$ Соединение разорвано.");
 	}
 }
 void Send()
 {
 	char buffer[256];
 	GetWindowTextA(MsgBox, buffer, 256);
-	send(client, buffer, sizeof(buffer), NULL);
+	if (string(buffer) == "$ disconnect") Exit();
+	else send(client, buffer, sizeof(buffer), NULL);
+	DM("> " + string(buffer));
 	SetWindowTextA(MsgBox, "Введите сообщение...");
 }
