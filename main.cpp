@@ -117,6 +117,11 @@ LRESULT CommandHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		Exit();
 		break;
 	}
+	case OnSendPressed:
+	{
+
+		break;
+	}
 	default:
 		return DefWindowProc(hWnd, uMsg, wParam, lParam);
 	}
@@ -160,8 +165,17 @@ DWORD WINAPI ClientHandler(LPVOID lpParam)
 	addr.sin_family = AF_INET;
 
 	SOCKET client;
-	
-
+	if ((client = socket(AF_INET, SOCK_STREAM, NULL)) == SOCKET_ERROR)
+	{
+		MB("Ошибка функции socket: " + to_string(WSAGetLastError()), TRUE);
+		return 1;
+	}
+	if ((connect(client, (SOCKADDR*)&addr, sizeof(addr))) == SOCKET_ERROR)
+	{
+		MB("Ошибка функции connect: " + to_string(WSAGetLastError()), TRUE);
+		return 1;
+	}
+	DM("Успешное подключение к серверу!");
 
 	return 1;
 }
