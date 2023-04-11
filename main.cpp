@@ -70,7 +70,7 @@ LRESULT CommandHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 }
 void OnMainWindowCreated(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	
+	Init();
 }
 void MB(string _Msg, string _End, UINT _Style)
 {
