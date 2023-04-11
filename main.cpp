@@ -11,6 +11,8 @@ HANDLE ServerThread = { };
 BOOL running = FALSE;
 CHAR BUFFER[BUFFERSIZE] = { };
 SOCKET server, client;
+SOCKADDR_IN addr;
+int addr_size = sizeof(addr);
 
 
 //
@@ -156,8 +158,6 @@ void DM(string _Msg, string _End)
 //
 DWORD WINAPI ServerHandler(LPVOID lpParam)
 {
-	SOCKADDR_IN addr;
-	int size = sizeof(addr);
 	addr.sin_addr.s_addr = inet_addr(DEFAULT_IP);
 	addr.sin_port = htons(DEFAULT_PORT);
 	addr.sin_family = AF_INET;
@@ -181,20 +181,11 @@ DWORD WINAPI ServerHandler(LPVOID lpParam)
 	}
 	
 	DM("Ожидание клиентов...");
-	if ((client = accept(server, (SOCKADDR*)&addr, &size)) == SOCKET_ERROR)
-	{
-		MB("Ошибка функции accept: " + to_string(WSAGetLastError()), TRUE);
-	}
-	else
-	{
-		DM("Клиент присоединился!");
-	}
-
 	CreateThread(
 		NULL,
 		0,
-		ReceiveProc,
-		(LPVOID)RECEIVE_T,
+		AcceptProc,
+		(LPVOID)ACCEPT_T,
 		0,
 		NULL);
 
@@ -248,4 +239,28 @@ DWORD WINAPI ReceiveProc(LPVOID lpParam)
 		}
 		DM(buffer);
 	}
+}
+DWORD WINAPI AcceptProc(LPVOID lpParam)
+{
+	while (running)
+	{
+		if ((client = accept(server, (SOCKADDR*)&addr, &addr_size)) == SOCKET_ERROR)
+		{
+			MB("Ошибка функции accept: " + to_string(WSAGetLastError()), TRUE);
+		}
+		else
+		{
+			DM("Клиент присоединился!");
+		}
+
+		CreateThread(
+			NULL,
+			0,
+			ReceiveProc,
+			(LPVOID)RECEIVE_T,
+			0,
+			NULL);
+	}
+
+	return 1;
 }

@@ -3,11 +3,16 @@
 #include "base.h"
 
 #define MAIN_WC L"MainWndClass"
-#define SERVER_T 1
-#define RECEIVE_T 2
 #define BUFFERSIZE 16384
 #define DEFAULT_PORT 1111
 #define DEFAULT_IP "127.0.01"
+
+
+//		THREADS
+//
+#define SERVER_T 1
+#define RECEIVE_T 2
+#define ACCEPT_T 3
 
 //		COMMANDS
 //
@@ -28,3 +33,4 @@ DWORD WINAPI ServerHandler(LPVOID lpParam);
 void Init();
 void Stop();
 DWORD WINAPI ReceiveProc(LPVOID lpParam);
+DWORD WINAPI AcceptProc(LPVOID lpParam);
