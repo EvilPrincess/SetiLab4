@@ -12,6 +12,7 @@ HWND MsgBox = { };
 HANDLE ClientThread = { };
 BOOL running = FALSE;
 CHAR BUFFER[BUFFERSIZE] = { };
+SOCKET client = { };
 
 
 //
@@ -26,7 +27,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
 
 	MSG MainWndMessage = { };
 
-	MainWnd = CreateWindow(MAIN_WC, L"Так называемый почтовый сервер", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 100, 100, 1200, 700, NULL, NULL, NULL, NULL);
+	MainWnd = CreateWindow(MAIN_WC, L"Так называемый почтовый клиент", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 100, 100, 1200, 700, NULL, NULL, NULL, NULL);
 	while (GetMessage(&MainWndMessage, NULL, NULL, NULL)) {
 		TranslateMessage(&MainWndMessage);
 		DispatchMessage(&MainWndMessage);
@@ -122,7 +123,7 @@ LRESULT CommandHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 	case OnSendPressed:
 	{
-
+		Send();
 		break;
 	}
 	default:
@@ -173,7 +174,7 @@ DWORD WINAPI ClientHandler(LPVOID lpParam)
 	addr.sin_port = htons(DEFAULT_PORT);
 	addr.sin_family = AF_INET;
 
-	SOCKET client;
+	client;
 	if ((client = socket(AF_INET, SOCK_STREAM, NULL)) == SOCKET_ERROR)
 	{
 		MB("Ошибка функции socket: " + to_string(WSAGetLastError()), TRUE);
@@ -219,4 +220,10 @@ void Exit()
 	{
 		DM("Соединение разорвано.");
 	}
+}
+void Send()
+{
+	char buffer[256];
+	GetWindowTextA(MsgBox, buffer, 256);
+	send(client, buffer, sizeof(buffer), NULL);
 }
