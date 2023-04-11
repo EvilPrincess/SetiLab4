@@ -4,6 +4,7 @@
 
 #define MAIN_WC L"MainWndClass"
 #define SERVER_T 0
+#define BUFFERSIZE 16384
 #define DEFAULT_PORT 1111
 #define DEFAULT_IP "127.0.01"
 

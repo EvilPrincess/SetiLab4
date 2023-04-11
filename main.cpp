@@ -9,6 +9,7 @@ HWND StartBtn = { };
 HWND StopBtn = { };
 HANDLE ServerThread = { };
 BOOL running = TRUE;
+CHAR BUFFER[BUFFERSIZE] = { };
 
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdshow) {
@@ -107,17 +108,23 @@ void OnMainWindowCreated(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	DrawServer(hWnd);
 	CreateWidgets(hWnd);
+	Init();
 }
 void CreateWidgets(HWND hWnd)
 {
 	RECT r; 
 	GetClientRect(hWnd, &r);
-	EditBox = CreateWindowA("EDIT", "tet", WS_CHILD | WS_VISIBLE | ES_MULTILINE /*| ES_READONLY*/ | 
+	EditBox = CreateWindowA("EDIT", "", WS_CHILD | WS_VISIBLE | ES_MULTILINE | ES_READONLY | 
 		ES_AUTOVSCROLL | WS_VSCROLL, 11, 11, r.right - 22, r.bottom - 112, hWnd, NULL, NULL, NULL);
 }
 void MB(string _Msg, UINT _Style)
 {
 	MessageBoxA(NULL, _Msg.c_str(), "Да", _Style);
+}
+void DM(string _Msg, string _End)
+{
+	GetWindowTextA(EditBox, BUFFER, BUFFERSIZE);
+	SetWindowTextA(EditBox, (string(BUFFER) + _Msg + _End).c_str());
 }
 DWORD WINAPI ServerHandler(LPVOID lpParam)
 {
@@ -146,7 +153,7 @@ DWORD WINAPI ServerHandler(LPVOID lpParam)
 
 	SOCKET newConnection;
 
-	//MB("Waiting for new connections...");
+	DM("Waiting for new connections...");
 
 	return 1;
 }
