@@ -155,19 +155,19 @@ DWORD WINAPI ServerHandler(LPVOID lpParam)
 	SOCKET sListen;
 	if ((sListen = socket(AF_INET, SOCK_STREAM, NULL)) == SOCKET_ERROR)
 	{
-		MB("ащипка создания сокета", MB_OK | MB_ICONERROR);
+		MB("Ошибка функции socket: " + to_string(WSAGetLastError()), TRUE);
 		return 1;
 	}
 	if ((bind(sListen, (SOCKADDR*)&addr, sizeof(addr))) == SOCKET_ERROR)
 	{
-		MB(to_string(WSAGetLastError()).c_str(), MB_OK | MB_ICONERROR);
+		MB("Ошибка функции bind: " + to_string(WSAGetLastError()), TRUE);
 		return 1;
 	}
 	DM("Успешное создание сервера!");
 
 	if ((listen(sListen, SOMAXCONN)) == SOCKET_ERROR)
 	{
-		MB("ащипка прослушивания", MB_OK | MB_ICONERROR);
+		MB("Ошибка функции listen: " + to_string(WSAGetLastError()), TRUE);
 		return 1;
 	}
 	
