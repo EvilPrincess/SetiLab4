@@ -120,7 +120,12 @@ LRESULT CommandHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case EN_KILLFOCUS:
 		{
 			if (LOWORD(wParam) == MSG_WC)
-				SetWindowTextA(MsgBox, "¬ведите сообщение...");
+			{
+				char buf[256];
+				GetWindowTextA(MsgBox, buf, 256);
+				if (string(buf) == "")
+					SetWindowTextA(MsgBox, "¬ведите сообщение...");
+			}
 			break;
 		}
 	}
@@ -240,4 +245,5 @@ void Send()
 	char buffer[256];
 	GetWindowTextA(MsgBox, buffer, 256);
 	send(client, buffer, sizeof(buffer), NULL);
+	SetWindowTextA(MsgBox, "¬ведите сообщение...");
 }
