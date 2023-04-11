@@ -152,28 +152,28 @@ DWORD WINAPI ServerHandler(LPVOID lpParam)
 	addr.sin_port = htons(DEFAULT_PORT);
 	addr.sin_family = AF_INET;
 
-	SOCKET sListen;
-	if ((sListen = socket(AF_INET, SOCK_STREAM, NULL)) == SOCKET_ERROR)
+	SOCKET server;
+	if ((server = socket(AF_INET, SOCK_STREAM, NULL)) == SOCKET_ERROR)
 	{
 		MB("Ошибка функции socket: " + to_string(WSAGetLastError()), TRUE);
 		return 1;
 	}
-	if ((bind(sListen, (SOCKADDR*)&addr, sizeof(addr))) == SOCKET_ERROR)
+	if ((bind(server, (SOCKADDR*)&addr, sizeof(addr))) == SOCKET_ERROR)
 	{
 		MB("Ошибка функции bind: " + to_string(WSAGetLastError()), TRUE);
 		return 1;
 	}
 	DM("Успешное создание сервера!");
 
-	if ((listen(sListen, SOMAXCONN)) == SOCKET_ERROR)
+	if ((listen(server, SOMAXCONN)) == SOCKET_ERROR)
 	{
 		MB("Ошибка функции listen: " + to_string(WSAGetLastError()), TRUE);
 		return 1;
 	}
 	
 	DM("Ожидание клиентов...");
-	SOCKET newConnection;
-	if ((newConnection = accept(sListen, (SOCKADDR*)&addr, &size)) == SOCKET_ERROR)
+	SOCKET client;
+	if ((client = accept(server, (SOCKADDR*)&addr, &size)) == SOCKET_ERROR)
 	{
 		MB("Ошибка функции accept: " + to_string(WSAGetLastError()), TRUE);
 	}
