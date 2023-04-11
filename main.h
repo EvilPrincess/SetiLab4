@@ -22,4 +22,5 @@ void Init();
 void Stop();
 inline void DrawServer(HWND hWnd);
 inline void OnResize(HWND hWnd);
+inline void ResizeWindows(HWND hWnd);
 void CreateWidgets(HWND hWnd);

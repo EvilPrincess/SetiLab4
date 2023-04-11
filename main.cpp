@@ -54,7 +54,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		case WM_PAINT:
 		{
-			DrawServer(hWnd);
+			/*DrawServer(hWnd);*/
 			break;
 		}
 		case WM_COMMAND:
@@ -73,8 +73,14 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 }
 inline void OnResize(HWND hWnd)
 {
+	ResizeWindows(hWnd);
 	DrawServer(hWnd);
-	// resize elements
+}
+inline void ResizeWindows(HWND hWnd)
+{
+	RECT r;
+	GetClientRect(hWnd, &r);
+	MoveWindow(EditBox, 11, 11, r.right - 32, r.bottom - 112, TRUE);
 }
 inline void DrawServer(HWND hWnd)
 {
@@ -99,7 +105,15 @@ LRESULT CommandHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 }
 void OnMainWindowCreated(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	
+	DrawServer(hWnd);
+	CreateWidgets(hWnd);
+}
+void CreateWidgets(HWND hWnd)
+{
+	RECT r; 
+	GetClientRect(hWnd, &r);
+	EditBox = CreateWindowA("EDIT", "tet", WS_CHILD | WS_VISIBLE | ES_MULTILINE /*| ES_READONLY*/ | 
+		ES_AUTOVSCROLL | WS_VSCROLL, 11, 11, r.right - 22, r.bottom - 112, hWnd, NULL, NULL, NULL);
 }
 void MB(string _Msg, string _End, UINT _Style)
 {
