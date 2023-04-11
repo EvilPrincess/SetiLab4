@@ -17,12 +17,12 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 WNDCLASS NewWindowClass(HBRUSH BGColor, HCURSOR Cursor, HINSTANCE hInst, HICON Icon, LPCWSTR Name, WNDPROC Procedure);
 LRESULT CommandHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 void OnMainWindowCreated(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+inline void DrawServer(HWND hWnd);
+inline void OnResize(HWND hWnd);
+inline void ResizeWindows(HWND hWnd);
+void CreateWidgets(HWND hWnd);
 void MB(string _Msg, BOOL _IsWarning = FALSE);
 void DM(string _Msg, string _End = "\r\n");
 DWORD WINAPI ServerHandler(LPVOID lpParam);
 void Init();
 void Stop();
-inline void DrawServer(HWND hWnd);
-inline void OnResize(HWND hWnd);
-inline void ResizeWindows(HWND hWnd);
-void CreateWidgets(HWND hWnd);

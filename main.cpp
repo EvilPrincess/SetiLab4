@@ -191,6 +191,10 @@ DWORD WINAPI ServerHandler(LPVOID lpParam)
 		DM("Клиент присоединился!");
 	}
 
+	char buffer[256];
+	recv(client, buffer, sizeof(buffer), NULL);
+	DM(buffer);
+
 	return 1;
 }
 void Init()
