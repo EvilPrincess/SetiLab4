@@ -26,3 +26,4 @@ void DM(string _Msg, string _End = "\r\n");
 DWORD WINAPI ServerHandler(LPVOID lpParam);
 void Init();
 void Stop();
+DWORD WINAPI RecieveProc(LPVOID lpParam);

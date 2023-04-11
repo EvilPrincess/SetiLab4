@@ -10,6 +10,7 @@ HWND StopBtn = { };
 HANDLE ServerThread = { };
 BOOL running = FALSE;
 CHAR BUFFER[BUFFERSIZE] = { };
+SOCKET client;
 
 
 //
@@ -181,7 +182,6 @@ DWORD WINAPI ServerHandler(LPVOID lpParam)
 	}
 	
 	DM("Ожидание клиентов...");
-	SOCKET client;
 	if ((client = accept(server, (SOCKADDR*)&addr, &size)) == SOCKET_ERROR)
 	{
 		MB("Ошибка функции accept: " + to_string(WSAGetLastError()), TRUE);
@@ -191,9 +191,7 @@ DWORD WINAPI ServerHandler(LPVOID lpParam)
 		DM("Клиент присоединился!");
 	}
 
-	char buffer[256];
-	recv(client, buffer, sizeof(buffer), NULL);
-	DM(buffer);
+	
 
 	return 1;
 }
@@ -228,4 +226,11 @@ void Stop()
 	{
 		DM("Сервер отключен.");
 	}
+}
+
+DWORD WINAPI RecieveProc(LPVOID lpParam)
+{
+	char buffer[256];
+	recv(client, buffer, sizeof(buffer), NULL);
+	DM(buffer);
 }
