@@ -9,6 +9,7 @@ HWND StartBtn = { };
 HWND StopBtn = { };
 HANDLE ServerThread = { };
 BOOL running = FALSE;
+BOOL receiving = FALSE;
 CHAR BUFFER[BUFFERSIZE] = { };
 SOCKET server, client;
 SOCKADDR_IN addr;
@@ -214,6 +215,7 @@ void Stop()
 {
 	if (!running) return;
 	running = FALSE;
+	receiving = FALSE;
 	closesocket(client);
 	closesocket(server);
 	if (WSACleanup() == SOCKET_ERROR)
@@ -229,12 +231,12 @@ void Stop()
 DWORD WINAPI ReceiveProc(LPVOID lpParam)
 {
 	char buffer[256];
-	while(running)
+	while(receiving)
 	{
-		if (recv(client, buffer, sizeof(buffer), NULL) == 0)
+		recv(client, buffer, sizeof(buffer), NULL);
+		if (string(buffer) == "$ disconnect")
 		{
 			DM("Клиент отключился. Очень жаль...");
-			running = FALSE;
 			return 1;
 		}
 		DM(buffer);
@@ -252,6 +254,8 @@ DWORD WINAPI AcceptProc(LPVOID lpParam)
 		{
 			DM("Клиент присоединился!");
 		}
+
+		receiving = TRUE;
 
 		CreateThread(
 			NULL,
