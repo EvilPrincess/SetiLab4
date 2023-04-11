@@ -1,13 +1,15 @@
 #include "main.h"
 
-using namespace std;
-
 //
 //		GLOBAL VARIABLES
 //
 HWND MainWnd = { };
+HWND EditBox = { };
+HWND StartBtn = { };
+HWND StopBtn = { };
 HANDLE ServerThread = { };
 BOOL running = TRUE;
+
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdshow) {
 
@@ -50,14 +52,41 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			PostQuitMessage(0);
 			break;
 		}
+		case WM_PAINT:
+		{
+			DrawServer(hWnd, uMsg, wParam, lParam);
+			break;
+		}
 		case WM_COMMAND:
 		{
 			return CommandHandler(hWnd, uMsg, wParam, lParam);
 			break;
 		}
+		case WM_SIZE:
+		{
+			DrawServer(hWnd, uMsg, wParam, lParam);
+			return 0;
+		}
 		default:
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);
 	}
+}
+inline void OnResize(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	DrawServer(hWnd, uMsg, wParam, lParam);
+	// resize elements
+}
+inline void DrawServer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	HDC hDC;
+	RECT r;
+
+	hDC = GetDC(hWnd);
+	GetClientRect(hWnd, &r);
+
+	Rectangle(hDC, 10, 10, r.right-20, r.bottom - 100);
+
+	ReleaseDC(hWnd, hDC);
 }
 LRESULT CommandHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -70,7 +99,7 @@ LRESULT CommandHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 }
 void OnMainWindowCreated(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	Init();
+	
 }
 void MB(string _Msg, string _End, UINT _Style)
 {
@@ -103,7 +132,7 @@ DWORD WINAPI ServerHandler(LPVOID lpParam)
 
 	SOCKET newConnection;
 
-	MB("Waiting for new connections...");
+	//MB("Waiting for new connections...");
 
 	return 1;
 }
