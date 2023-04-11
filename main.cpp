@@ -175,7 +175,7 @@ DWORD WINAPI ServerHandler(LPVOID lpParam)
 	SOCKET newConnection;
 	if ((newConnection = accept(sListen, (SOCKADDR*)&addr, &size)) == SOCKET_ERROR)
 	{
-		MB();
+		MB("Ошибка функции accept: " + to_string(WSAGetLastError()), TRUE);
 	}
 
 
