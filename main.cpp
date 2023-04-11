@@ -135,9 +135,9 @@ void CreateWidgets(HWND hWnd)
 	StopBtn = CreateWindowA("BUTTON", "Отключить", WS_CHILD | WS_VISIBLE | SS_CENTER,
 		r.right / 2, r.bottom - 90, r.right / 2 - 20, 80, hWnd, (HMENU)OnStopPressed, NULL, NULL);
 }
-void MB(string _Msg, UINT _Style)
+void MB(string _Msg, BOOL _IsWarning)
 {
-	MessageBoxA(NULL, _Msg.c_str(), "Да", _Style);
+	MessageBoxA(NULL, _Msg.c_str(), "Да", _IsWarning? MB_OK | MB_ICONERROR : MB_OK);
 }
 void DM(string _Msg, string _End)
 {
@@ -163,7 +163,6 @@ DWORD WINAPI ServerHandler(LPVOID lpParam)
 		MB(to_string(WSAGetLastError()).c_str(), MB_OK | MB_ICONERROR);
 		return 1;
 	}
-
 	DM("Успешное создание сервера!");
 
 	if ((listen(sListen, SOMAXCONN)) == SOCKET_ERROR)
@@ -171,10 +170,14 @@ DWORD WINAPI ServerHandler(LPVOID lpParam)
 		MB("ащипка прослушивания", MB_OK | MB_ICONERROR);
 		return 1;
 	}
-
-	SOCKET newConnection;
-
+	
 	DM("Ожидание клиентов...");
+	SOCKET newConnection;
+	if ((newConnection = accept(sListen, (SOCKADDR*)&addr, &size)) == SOCKET_ERROR)
+	{
+		MB();
+	}
+
 
 	return 1;
 }
