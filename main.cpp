@@ -14,6 +14,9 @@ BOOL running = FALSE;
 CHAR BUFFER[BUFFERSIZE] = { };
 
 
+//
+//		¬»Õ¿œ»ÿÕ€≈ ‘”Õ ÷»»
+//
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdshow) {
 
 	WNDCLASS MainWndClass = NewWindowClass((HBRUSH)COLOR_WINDOW, LoadCursor(NULL, IDC_ARROW), hInst,
@@ -147,6 +150,9 @@ void CreateWidgets(HWND hWnd)
 	SendBtn = CreateWindowA("button", "ŒÚÔ‡‚ËÚ¸", WS_CHILD | WS_VISIBLE,
 		r.right - 200 + 10, r.bottom - 90, 80, 80, hWnd, (HMENU)OnSendPressed, NULL, NULL);
 }
+//
+//		¬—œŒÃŒ√¿“≈À‹Õ€≈
+//
 void MB(string _Msg, BOOL _IsWarning)
 {
 	MessageBoxA(NULL, _Msg.c_str(), "ƒ‡", _IsWarning ? MB_OK | MB_ICONERROR : MB_OK);
@@ -156,6 +162,9 @@ void DM(string _Msg, string _End)
 	GetWindowTextA(EditBox, BUFFER, BUFFERSIZE);
 	SetWindowTextA(EditBox, (string(BUFFER) + _Msg + _End).c_str());
 }
+//
+//		À¿¡¿
+//
 DWORD WINAPI ClientHandler(LPVOID lpParam)
 {
 	SOCKADDR_IN addr;
