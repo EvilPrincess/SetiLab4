@@ -189,7 +189,6 @@ DWORD WINAPI ClientHandler(LPVOID lpParam)
 	addr.sin_port = htons(DEFAULT_PORT);
 	addr.sin_family = AF_INET;
 
-	client;
 	if ((client = socket(AF_INET, SOCK_STREAM, NULL)) == SOCKET_ERROR)
 	{
 		MB("Ошибка функции socket: " + to_string(WSAGetLastError()), TRUE);
