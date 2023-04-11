@@ -12,6 +12,9 @@ BOOL running = FALSE;
 CHAR BUFFER[BUFFERSIZE] = { };
 
 
+//
+//		ВИНАПИШНЫЕ ФУНКЦИИ
+//
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdshow) {
 
 	WNDCLASS MainWndClass = NewWindowClass((HBRUSH)COLOR_WINDOW, LoadCursor(NULL, IDC_ARROW), hInst,
@@ -135,6 +138,9 @@ void CreateWidgets(HWND hWnd)
 	StopBtn = CreateWindowA("BUTTON", "Отключить", WS_CHILD | WS_VISIBLE | SS_CENTER,
 		r.right / 2, r.bottom - 90, r.right / 2 - 20, 80, hWnd, (HMENU)OnStopPressed, NULL, NULL);
 }
+//
+//		ВСПОМОГАТЕЛЬНЫЕ
+//
 void MB(string _Msg, BOOL _IsWarning)
 {
 	MessageBoxA(NULL, _Msg.c_str(), "Да", _IsWarning? MB_OK | MB_ICONERROR : MB_OK);
@@ -144,6 +150,9 @@ void DM(string _Msg, string _End)
 	GetWindowTextA(EditBox, BUFFER, BUFFERSIZE);
 	SetWindowTextA(EditBox, (string(BUFFER) + _Msg + _End).c_str());
 }
+//
+//		ЛАБА
+//
 DWORD WINAPI ServerHandler(LPVOID lpParam)
 {
 	SOCKADDR_IN addr;
@@ -177,7 +186,10 @@ DWORD WINAPI ServerHandler(LPVOID lpParam)
 	{
 		MB("Ошибка функции accept: " + to_string(WSAGetLastError()), TRUE);
 	}
-
+	else
+	{
+		DM("Клиент присоединился!");
+	}
 
 	return 1;
 }
