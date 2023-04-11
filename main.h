@@ -13,6 +13,7 @@
 #define OnEnterPressed 0
 #define OnExitPressed 1
 #define OnSendPressed 2
+#define MSG_WC 3
 
 LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 WNDCLASS NewWindowClass(HBRUSH BGColor, HCURSOR Cursor, HINSTANCE hInst, HICON Icon, LPCWSTR Name, WNDPROC Procedure);

@@ -109,6 +109,21 @@ inline void DrawClient(HWND hWnd)
 }
 LRESULT CommandHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	switch (HIWORD(wParam))
+	{
+		case EN_SETFOCUS:
+		{
+			if (LOWORD(wParam) == MSG_WC)
+				SetWindowTextA(MsgBox, "");
+			break;
+		}
+		case EN_KILLFOCUS:
+		{
+			if (LOWORD(wParam) == MSG_WC)
+				SetWindowTextA(MsgBox, "Введите сообщение...");
+			break;
+		}
+	}
 	switch (wParam)
 	{
 	case OnEnterPressed:
@@ -142,8 +157,8 @@ void CreateWidgets(HWND hWnd)
 	GetClientRect(hWnd, &r);
 	EditBox = CreateWindowA("EDIT", "", WS_CHILD | WS_VISIBLE | ES_MULTILINE | ES_READONLY |
 		ES_AUTOVSCROLL | WS_VSCROLL, 11, 11, r.right - 22, r.bottom - 112, hWnd, NULL, NULL, NULL);
-	MsgBox = CreateWindowA("EDIT", "", WS_CHILD | WS_VISIBLE | ES_MULTILINE,
-		11, r.bottom - 89, r.right - 120 - 100 + 10 - 2, 80 - 2, hWnd, NULL, NULL, NULL);
+	MsgBox = CreateWindowA("EDIT", "Введите сообщение...", WS_CHILD | WS_VISIBLE | ES_MULTILINE,
+		11, r.bottom - 89, r.right - 120 - 100 + 10 - 2, 80 - 2, hWnd, (HMENU)MSG_WC, NULL, NULL);
 	EnterBtn = CreateWindowA("button", "Войти", WS_CHILD | WS_VISIBLE,
 		r.right - 100, r.bottom - 90, 80, 35, hWnd, (HMENU)OnEnterPressed, NULL, NULL);
 	ExitBtn = CreateWindowA("button", "Выйти", WS_CHILD | WS_VISIBLE,
@@ -226,5 +241,4 @@ void Send()
 	char buffer[256];
 	GetWindowTextA(MsgBox, buffer, 256);
 	send(client, buffer, sizeof(buffer), NULL);
-	SetWindowTextA(MsgBox, "");
 }
