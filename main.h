@@ -20,5 +20,6 @@ void MB(string _Msg, string _End = "\r\n", UINT _Style = MB_OK /*| MB_ICONERROR*
 DWORD WINAPI ServerHandler(LPVOID lpParam);
 void Init();
 void Stop();
-inline void DrawServer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-inline void OnResize(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+inline void DrawServer(HWND hWnd);
+inline void OnResize(HWND hWnd);
+void CreateWidgets(HWND hWnd);

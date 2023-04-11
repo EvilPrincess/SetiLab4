@@ -54,7 +54,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		case WM_PAINT:
 		{
-			DrawServer(hWnd, uMsg, wParam, lParam);
+			DrawServer(hWnd);
 			break;
 		}
 		case WM_COMMAND:
@@ -64,19 +64,19 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 		case WM_SIZE:
 		{
-			DrawServer(hWnd, uMsg, wParam, lParam);
+			OnResize(hWnd);
 			return 0;
 		}
 		default:
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);
 	}
 }
-inline void OnResize(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+inline void OnResize(HWND hWnd)
 {
-	DrawServer(hWnd, uMsg, wParam, lParam);
+	DrawServer(hWnd);
 	// resize elements
 }
-inline void DrawServer(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+inline void DrawServer(HWND hWnd)
 {
 	HDC hDC;
 	RECT r;
