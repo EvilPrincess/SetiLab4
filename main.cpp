@@ -27,7 +27,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
 
 	MSG MainWndMessage = { };
 
-	MainWnd = CreateWindow(MAIN_WC, L"Так называемый почтовый клиент", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 100, 100, 1200, 700, NULL, NULL, NULL, NULL);
+	MainWnd = CreateWindow(MAIN_WC, L"Так называемый почтовый клиент", WS_CLIPCHILDREN | WS_OVERLAPPEDWINDOW | WS_VISIBLE, 100, 100, 1200, 700, NULL, NULL, NULL, NULL);
 	while (GetMessage(&MainWndMessage, NULL, NULL, NULL)) {
 		TranslateMessage(&MainWndMessage);
 		DispatchMessage(&MainWndMessage);
@@ -71,7 +71,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 	case WM_MOVE:
 	{
-		OnResize(hWnd);
+		DrawClient(hWnd);
 		break;
 	}
 	default:
@@ -96,8 +96,8 @@ inline void DrawClient(HWND hWnd)
 	HDC hDC;
 	RECT r;
 
-	InvalidateRect(hWnd, NULL, TRUE);
-	UpdateWindow(hWnd);
+	/*InvalidateRect(hWnd, NULL, TRUE);
+	UpdateWindow(hWnd);*/
 
 	hDC = GetDC(hWnd);
 	GetClientRect(hWnd, &r);
@@ -114,7 +114,12 @@ LRESULT CommandHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		case EN_SETFOCUS:
 		{
 			if (LOWORD(wParam) == MSG_WC)
-				SetWindowTextA(MsgBox, "");
+			{
+				char buf[256];
+				GetWindowTextA(MsgBox, buf, 256);
+				if (string(buf) == "Введите сообщение...")
+					SetWindowTextA(MsgBox, "");
+			}
 			break;
 		}
 		case EN_KILLFOCUS:
@@ -154,7 +159,6 @@ void OnMainWindowCreated(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	DrawClient(hWnd);
 	CreateWidgets(hWnd);
-
 }
 void CreateWidgets(HWND hWnd)
 {
