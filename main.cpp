@@ -6,9 +6,6 @@ using namespace std;
 //		GLOBAL VARIABLES
 //
 HWND MainWnd = { };
-SN* server;
-CN* client;
-
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdshow) {
 
@@ -19,7 +16,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
 
 	MSG MainWndMessage = { };
 
-	MainWnd = CreateWindow(MAIN_WC, L"Так называемый почтовый сервер", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_VISIBLE, 100, 100, 1200, 700, NULL, NULL, NULL, NULL);
+	MainWnd = CreateWindow(MAIN_WC, L"Так называемый почтовый сервер", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 100, 100, 1200, 700, NULL, NULL, NULL, NULL);
 	while (GetMessage(&MainWndMessage, NULL, NULL, NULL)) {
 		TranslateMessage(&MainWndMessage);
 		DispatchMessage(&MainWndMessage);
@@ -78,24 +75,5 @@ LRESULT CommandHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 void OnMainWindowCreated(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	server = new SN();
-	client = new CN();
-	_beginthread(ServerLoop, 0, (void*)12);
-	ClientLoop();
-}
-
-void serverLoop(void* arg)
-{
-	while (true)
-	{
-		server->update();
-	}
-}
-
-void clientLoop()
-{
-	while (true)
-	{
-		
-	}
+	
 }

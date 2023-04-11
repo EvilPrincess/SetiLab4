@@ -1,9 +1,6 @@
 #pragma once
 
 #include "base.h"
-#include "INetwork.h"
-#include "ClientNetwork.h"
-#include "ServerNetwork.h"
 
 #define MAIN_WC L"MainWndClass"
 

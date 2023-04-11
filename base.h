@@ -1,17 +1,12 @@
 #pragma once
 
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#pragma comment(lib, "WS2_32.lib")
 #include <winsock2.h>
 #include <windows.h>
-#include <WS2tcpip.h>
 #include <string>
-#include <map>
-#include <process.h>
 
-#pragma comment (lib, "Ws2_32.lib")
-#pragma comment (lib, "Mswsock.lib")
-#pragma comment (lib, "AdvApi32.lib")
-
-#define DEFAULT_BUFLEN 512
+#define DEFAULT_BUFLEN 16384
 #define DEFAULT_PORT "6881"
 
 using namespace std;
