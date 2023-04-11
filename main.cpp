@@ -115,9 +115,9 @@ void CreateWidgets(HWND hWnd)
 	EditBox = CreateWindowA("EDIT", "tet", WS_CHILD | WS_VISIBLE | ES_MULTILINE /*| ES_READONLY*/ | 
 		ES_AUTOVSCROLL | WS_VSCROLL, 11, 11, r.right - 22, r.bottom - 112, hWnd, NULL, NULL, NULL);
 }
-void MB(string _Msg, string _End, UINT _Style)
+void MB(string _Msg, UINT _Style)
 {
-	MessageBoxA(NULL, (_Msg + _End).c_str(), "Да", _Style);
+	MessageBoxA(NULL, _Msg.c_str(), "Да", _Style);
 }
 DWORD WINAPI ServerHandler(LPVOID lpParam)
 {
@@ -130,17 +130,17 @@ DWORD WINAPI ServerHandler(LPVOID lpParam)
 	SOCKET sListen;
 	if ((sListen = socket(AF_INET, SOCK_STREAM, NULL)) == SOCKET_ERROR)
 	{
-		MB("ащипка создания сокета", "\r\n", MB_OK | MB_ICONERROR);
+		MB("ащипка создания сокета", MB_OK | MB_ICONERROR);
 		return 1;
 	}
 	if ((bind(sListen, (SOCKADDR*)&addr, sizeof(addr))) == SOCKET_ERROR)
 	{
-		MB(to_string(WSAGetLastError()).c_str(), "\r\n", MB_OK | MB_ICONERROR);
+		MB(to_string(WSAGetLastError()).c_str(), MB_OK | MB_ICONERROR);
 		return 1;
 	}
 	if ((listen(sListen, SOMAXCONN)) == SOCKET_ERROR)
 	{
-		MB("ащипка прослушивания", "\r\n", MB_OK | MB_ICONERROR);
+		MB("ащипка прослушивания", MB_OK | MB_ICONERROR);
 		return 1;
 	}
 
