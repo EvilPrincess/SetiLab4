@@ -16,7 +16,7 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
 
 	MSG MainWndMessage = { };
 
-	MainWnd = CreateWindow(MAIN_WC, L"Так называемый почтовый сервер", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 100, 100, 1200, 700, NULL, NULL, NULL, NULL);
+	MainWnd = CreateWindow(MAIN_WC, L"Так называемый почтовый клиент", WS_OVERLAPPEDWINDOW | WS_VISIBLE, 100, 100, 1200, 700, NULL, NULL, NULL, NULL);
 	while (GetMessage(&MainWndMessage, NULL, NULL, NULL)) {
 		TranslateMessage(&MainWndMessage);
 		DispatchMessage(&MainWndMessage);
