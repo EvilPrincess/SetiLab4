@@ -230,7 +230,7 @@ void Stop()
 
 DWORD WINAPI ReceiveProc(LPVOID lpParam)
 {
-	char buffer[256];
+	char buffer[1024];
 	while(receiving)
 	{
 		recv(client, buffer, sizeof(buffer), NULL);
