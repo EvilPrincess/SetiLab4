@@ -5,9 +5,11 @@
 //
 HWND MainWnd = { };
 HWND EditBox = { };
-HWND StartBtn = { };
-HWND StopBtn = { };
-HANDLE ServerThread = { };
+HWND EnterBtn = { };
+HWND ExitBtn = { };
+HWND SendBtn = { };
+HWND MsgBox = { };
+HANDLE ClientThread = { };
 BOOL running = FALSE;
 CHAR BUFFER[BUFFERSIZE] = { };
 
@@ -82,8 +84,8 @@ inline void ResizeWindows(HWND hWnd)
 	RECT r;
 	GetClientRect(hWnd, &r);
 	MoveWindow(EditBox, 11, 11, r.right - 32, r.bottom - 112, TRUE);
-	MoveWindow(StartBtn, 10, r.bottom - 90, r.right / 2 - 20, 80, TRUE);
-	MoveWindow(StopBtn, r.right / 2, r.bottom - 90, r.right / 2 - 20, 80, TRUE);
+	/*MoveWindow(EnterBtn, 10, r.bottom - 90, r.right / 2 - 20, 80, TRUE);
+	MoveWindow(ExitBtn, r.right / 2, r.bottom - 90, r.right / 2 - 20, 80, TRUE);*/
 }
 inline void DrawServer(HWND hWnd)
 {
@@ -104,14 +106,14 @@ LRESULT CommandHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (wParam)
 	{
-	case OnStartPressed:
+	case OnEnterPressed:
 	{
-		Init();
+		Enter();
 		break;
 	}
-	case OnStopPressed:
+	case OnExitPressed:
 	{
-		Stop();
+		Exit();
 		break;
 	}
 	default:
@@ -130,10 +132,18 @@ void CreateWidgets(HWND hWnd)
 	GetClientRect(hWnd, &r);
 	EditBox = CreateWindowA("EDIT", "", WS_CHILD | WS_VISIBLE | ES_MULTILINE | ES_READONLY |
 		ES_AUTOVSCROLL | WS_VSCROLL, 11, 11, r.right - 22, r.bottom - 112, hWnd, NULL, NULL, NULL);
-	StartBtn = CreateWindowA("BUTTON", "Включить", WS_CHILD | WS_VISIBLE | SS_CENTER,
+	/*EnterBtn = CreateWindowA("BUTTON", "Включить", WS_CHILD | WS_VISIBLE | SS_CENTER,
 		10, r.bottom - 90, r.right / 2 - 20, 80, hWnd, (HMENU)OnStartPressed, NULL, NULL);
-	StopBtn = CreateWindowA("BUTTON", "Отключить", WS_CHILD | WS_VISIBLE | SS_CENTER,
-		r.right / 2, r.bottom - 90, r.right / 2 - 20, 80, hWnd, (HMENU)OnStopPressed, NULL, NULL);
+	ExitBtn = CreateWindowA("BUTTON", "Отключить", WS_CHILD | WS_VISIBLE | SS_CENTER,
+		r.right / 2, r.bottom - 90, r.right / 2 - 20, 80, hWnd, (HMENU)OnStopPressed, NULL, NULL);*/
+	MsgBox = CreateWindowA("EDIT", "", WS_CHILD | WS_VISIBLE | ES_MULTILINE,
+		10, r.bottom - 90, r.right - 120 - 100 + 10, 80, hWnd, NULL, NULL, NULL);
+	EnterBtn = CreateWindowA("button", "Войти", WS_CHILD | WS_VISIBLE,
+		r.right - 100, r.bottom - 90, 80, 35, hWnd, (HMENU)OnEnterPressed, NULL, NULL);
+	ExitBtn = CreateWindowA("button", "Выйти", WS_CHILD | WS_VISIBLE,
+		r.right - 100, r.bottom - 90 + 40, 80, 35, hWnd, (HMENU)OnExitPressed, NULL, NULL);
+	SendBtn = CreateWindowA("button", "Отправить", WS_CHILD | WS_VISIBLE,
+		r.right - 200 + 10, r.bottom - 90, 80, 80, hWnd, (HMENU)OnSendPressed, NULL, NULL);
 }
 void MB(string _Msg, BOOL _IsWarning)
 {
@@ -144,7 +154,7 @@ void DM(string _Msg, string _End)
 	GetWindowTextA(EditBox, BUFFER, BUFFERSIZE);
 	SetWindowTextA(EditBox, (string(BUFFER) + _Msg + _End).c_str());
 }
-DWORD WINAPI ServerHandler(LPVOID lpParam)
+DWORD WINAPI ClientHandler(LPVOID lpParam)
 {
 	SOCKADDR_IN addr;
 	int size = sizeof(addr);
@@ -152,36 +162,13 @@ DWORD WINAPI ServerHandler(LPVOID lpParam)
 	addr.sin_port = htons(DEFAULT_PORT);
 	addr.sin_family = AF_INET;
 
-	SOCKET server;
-	if ((server = socket(AF_INET, SOCK_STREAM, NULL)) == SOCKET_ERROR)
-	{
-		MB("Ошибка функции socket: " + to_string(WSAGetLastError()), TRUE);
-		return 1;
-	}
-	if ((bind(server, (SOCKADDR*)&addr, sizeof(addr))) == SOCKET_ERROR)
-	{
-		MB("Ошибка функции bind: " + to_string(WSAGetLastError()), TRUE);
-		return 1;
-	}
-	DM("Успешное создание сервера!");
-
-	if ((listen(server, SOMAXCONN)) == SOCKET_ERROR)
-	{
-		MB("Ошибка функции listen: " + to_string(WSAGetLastError()), TRUE);
-		return 1;
-	}
-
-	DM("Ожидание клиентов...");
 	SOCKET client;
-	if ((client = accept(server, (SOCKADDR*)&addr, &size)) == SOCKET_ERROR)
-	{
-		MB("Ошибка функции accept: " + to_string(WSAGetLastError()), TRUE);
-	}
+	
 
 
 	return 1;
 }
-void Init()
+void Enter()
 {
 	if (running) return;
 	WSADATA WSAdata;
@@ -192,15 +179,15 @@ void Init()
 		PostQuitMessage(0);
 	}
 	running = TRUE;
-	ServerThread = CreateThread(
+	ClientThread = CreateThread(
 		NULL,
 		0,
-		ServerHandler,
-		SERVER_T,
+		ClientHandler,
+		CLIENT_T,
 		0,
 		NULL);
 }
-void Stop()
+void Exit()
 {
 	if (!running) return;
 	running = FALSE;
@@ -210,6 +197,6 @@ void Stop()
 	}
 	else
 	{
-		DM("Сервер отключен.");
+		DM("Соединение разорвано.");
 	}
 }
