@@ -226,4 +226,5 @@ void Send()
 	char buffer[256];
 	GetWindowTextA(MsgBox, buffer, 256);
 	send(client, buffer, sizeof(buffer), NULL);
+	SetWindowTextA(MsgBox, "");
 }
