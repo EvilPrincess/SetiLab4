@@ -77,7 +77,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 inline void OnResize(HWND hWnd)
 {
 	ResizeWindows(hWnd);
-	DrawServer(hWnd);
+	DrawClient(hWnd);
 }
 inline void ResizeWindows(HWND hWnd)
 {
@@ -87,7 +87,7 @@ inline void ResizeWindows(HWND hWnd)
 	/*MoveWindow(EnterBtn, 10, r.bottom - 90, r.right / 2 - 20, 80, TRUE);
 	MoveWindow(ExitBtn, r.right / 2, r.bottom - 90, r.right / 2 - 20, 80, TRUE);*/
 }
-inline void DrawServer(HWND hWnd)
+inline void DrawClient(HWND hWnd)
 {
 	HDC hDC;
 	RECT r;
@@ -99,6 +99,7 @@ inline void DrawServer(HWND hWnd)
 	GetClientRect(hWnd, &r);
 
 	Rectangle(hDC, 10, 10, r.right - 20, r.bottom - 100);
+	Rectangle(hDC, 10, r.bottom - 90, r.right - 200, r.bottom - 10);
 
 	ReleaseDC(hWnd, hDC);
 }
@@ -122,7 +123,7 @@ LRESULT CommandHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 }
 void OnMainWindowCreated(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	DrawServer(hWnd);
+	DrawClient(hWnd);
 	CreateWidgets(hWnd);
 
 }
@@ -132,12 +133,8 @@ void CreateWidgets(HWND hWnd)
 	GetClientRect(hWnd, &r);
 	EditBox = CreateWindowA("EDIT", "", WS_CHILD | WS_VISIBLE | ES_MULTILINE | ES_READONLY |
 		ES_AUTOVSCROLL | WS_VSCROLL, 11, 11, r.right - 22, r.bottom - 112, hWnd, NULL, NULL, NULL);
-	/*EnterBtn = CreateWindowA("BUTTON", "Включить", WS_CHILD | WS_VISIBLE | SS_CENTER,
-		10, r.bottom - 90, r.right / 2 - 20, 80, hWnd, (HMENU)OnStartPressed, NULL, NULL);
-	ExitBtn = CreateWindowA("BUTTON", "Отключить", WS_CHILD | WS_VISIBLE | SS_CENTER,
-		r.right / 2, r.bottom - 90, r.right / 2 - 20, 80, hWnd, (HMENU)OnStopPressed, NULL, NULL);*/
 	MsgBox = CreateWindowA("EDIT", "", WS_CHILD | WS_VISIBLE | ES_MULTILINE,
-		10, r.bottom - 90, r.right - 120 - 100 + 10, 80, hWnd, NULL, NULL, NULL);
+		11, r.bottom - 89, r.right - 120 - 100 + 10 - 2, 80 - 2, hWnd, NULL, NULL, NULL);
 	EnterBtn = CreateWindowA("button", "Войти", WS_CHILD | WS_VISIBLE,
 		r.right - 100, r.bottom - 90, 80, 35, hWnd, (HMENU)OnEnterPressed, NULL, NULL);
 	ExitBtn = CreateWindowA("button", "Выйти", WS_CHILD | WS_VISIBLE,

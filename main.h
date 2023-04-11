@@ -23,7 +23,7 @@ void DM(string _Msg, string _End = "\r\n");
 DWORD WINAPI ClientHandler(LPVOID lpParam);
 void Enter();
 void Exit();
-inline void DrawServer(HWND hWnd);
+inline void DrawClient(HWND hWnd);
 inline void OnResize(HWND hWnd);
 inline void ResizeWindows(HWND hWnd);
 void CreateWidgets(HWND hWnd);
