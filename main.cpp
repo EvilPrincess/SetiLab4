@@ -13,6 +13,7 @@ HANDLE ClientThread = { };
 BOOL running = FALSE;
 CHAR BUFFER[BUFFERSIZE] = { };
 SOCKET client = { };
+vector<string> msgStack{ };
 
 
 //
@@ -210,6 +211,12 @@ DWORD WINAPI ClientHandler(LPVOID lpParam)
 	}
 	DM("$ Успешное подключение к серверу!");
 
+	for (string msg : msgStack)
+	{
+		send(client, msg.c_str(), sizeof(msg), NULL);
+	}
+	msgStack.clear();
+
 	return 1;
 }
 void Enter()
@@ -252,7 +259,11 @@ void Send()
 	char buffer[256];
 	GetWindowTextA(MsgBox, buffer, 256);
 	if (string(buffer) == "$ disconnect") Exit();
-	else send(client, buffer, sizeof(buffer), NULL);
+	else 
+		if (send(client, buffer, sizeof(buffer), NULL) == SOCKET_ERROR)
+		{
+			msgStack.push_back(buffer);
+		}
 	DM("> " + string(buffer));
 	SetWindowTextA(MsgBox, "Введите сообщение...");
 }
