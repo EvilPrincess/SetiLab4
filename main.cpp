@@ -238,7 +238,7 @@ DWORD WINAPI ReceiveProc(LPVOID lpParam)
 		recv(client, buffer, sizeof(buffer), NULL);
 		if (string(buffer) == "$ disconnect")
 		{
-			DM("$ Клиент отключился. Очень жаль...");
+			DM("$ Клиент №" + to_string((UINT)lpParam) + " отключился. Очень жаль...");
 			return 1;
 		}
 		DM("Клиент №" + to_string((UINT)lpParam) + " > " + string(buffer));
@@ -254,7 +254,7 @@ DWORD WINAPI AcceptProc(LPVOID lpParam)
 		}
 		else
 		{
-			DM("$ Клиент присоединился!");
+			DM("$ Новый клиент присоединился!");
 		}
 
 		receiving = TRUE;
