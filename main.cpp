@@ -13,6 +13,7 @@ BOOL receiving = FALSE;
 CHAR BUFFER[BUFFERSIZE] = { };
 SOCKET server, client;
 SOCKADDR_IN addr;
+
 int addr_size = sizeof(addr);
 
 
