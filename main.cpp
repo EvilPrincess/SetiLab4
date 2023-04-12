@@ -13,6 +13,7 @@ BOOL receiving = FALSE;
 CHAR BUFFER[BUFFERSIZE] = { };
 SOCKET server, client;
 SOCKADDR_IN addr;
+UINT client_id = 0;
 
 int addr_size = sizeof(addr);
 
@@ -240,7 +241,7 @@ DWORD WINAPI ReceiveProc(LPVOID lpParam)
 			DM("$ Клиент отключился. Очень жаль...");
 			return 1;
 		}
-		DM("> " + string(buffer));
+		DM("Клиент №" + to_string((UINT)lpParam) + " > " + string(buffer));
 	}
 }
 DWORD WINAPI AcceptProc(LPVOID lpParam)
@@ -262,7 +263,7 @@ DWORD WINAPI AcceptProc(LPVOID lpParam)
 			NULL,
 			0,
 			ReceiveProc,
-			(LPVOID)RECEIVE_T,
+			(LPVOID)++client_id,
 			0,
 			NULL);
 	}
