@@ -39,3 +39,4 @@ DWORD WINAPI ClientHandler(LPVOID lpParam);
 void Enter();
 void Exit(BOOL wasConnected = 1);
 void Send();
+void StackSend();

@@ -219,7 +219,8 @@ LRESULT CommandHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 	case OnSendPressed:
 	{
-		Send();
+		if (running) Send();
+		else StackSend();
 		break;
 	}
 	case OnOpenIPWndPressed:
@@ -317,12 +318,13 @@ DWORD WINAPI ClientHandler(LPVOID lpParam)
 
 	DM("$ ”спешное подключение к серверу!");
 
-
-	//for (string msg : msgStack)
-	//{
-	//	send(client, msg.c_str(), sizeof(msg), NULL);
-	//}
-	//msgStack.clear();
+	if (!msgStack.empty()) DM("ќтправка сообщений из стека...");
+	for (string msg : msgStack)
+	{
+		send(client, msg.c_str(), sizeof(msg), NULL);
+	}
+	if (!msgStack.empty()) DM("ќтправка выполнена.");
+	msgStack.clear();
 
 	return 1;
 }
@@ -380,5 +382,13 @@ void Send()
 			msgStack.push_back(buffer);
 		}
 	DM("> " + string(buffer));
+	SetWindowTextA(MsgBox, "¬ведите сообщение...");
+}
+void StackSend()
+{
+	char buffer[256];
+	GetWindowTextA(MsgBox, buffer, 256);
+	msgStack.push_back(string(buffer));
+	DM("$ [ќжидает отправки...] -> " + string(buffer));
 	SetWindowTextA(MsgBox, "¬ведите сообщение...");
 }
