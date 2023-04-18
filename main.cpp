@@ -23,8 +23,11 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
 
 	WNDCLASS MainWndClass = NewWindowClass((HBRUSH)COLOR_WINDOW, LoadCursor(NULL, IDC_ARROW), hInst,
 		LoadIcon(NULL, IDI_QUESTION), MAIN_WC, MainWndProc);
+	WNDCLASS EnterIPWndClass = NewWindowClass((HBRUSH)COLOR_WINDOW, LoadCursor(NULL, IDC_ARROW), hInst,
+		LoadIcon(NULL, IDI_QUESTION), IPENTER_WC, EnterIPWndProc);
 
 	if (!RegisterClassW(&MainWndClass)) { return -1; }
+	if (!RegisterClassW(&EnterIPWndClass)) { return -1; }
 
 	MSG MainWndMessage = { };
 
@@ -77,6 +80,31 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 	default:
 		return DefWindowProc(hWnd, uMsg, wParam, lParam);
+	}
+}
+LRESULT CALLBACK EnterIPWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch (uMsg)
+	{
+		case WM_CREATE:
+		{
+
+			break;
+		}
+		case WM_COMMAND:
+		{
+			switch (wParam)
+			{
+				case OnIPApplyPressed:
+				{
+
+					break;
+				}
+			}
+			break;
+		}
+		default:
+			return DefWindowProc(hWnd, uMsg, wParam, lParam);
 	}
 }
 inline void OnResize(HWND hWnd)
