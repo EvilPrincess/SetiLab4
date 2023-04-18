@@ -252,11 +252,13 @@ DWORD WINAPI ClientHandler(LPVOID lpParam)
 	if ((client = socket(AF_INET, SOCK_STREAM, NULL)) == SOCKET_ERROR)
 	{
 		MB("Ошибка функции socket: " + to_string(WSAGetLastError()), TRUE);
+		running = FALSE;
 		return 1;
 	}
 	if ((connect(client, (SOCKADDR*)&addr, sizeof(addr))) == SOCKET_ERROR)
 	{
-		MB("Ошибка функции connect: " + to_string(WSAGetLastError()), TRUE);
+		MB("Не удалось подключиться к серверу! Ошибка функции connect: " + to_string(WSAGetLastError()), TRUE);
+		running = FALSE;
 		return 1;
 	}
 	DM("$ Успешное подключение к серверу!");
