@@ -253,6 +253,7 @@ DWORD WINAPI ReceiveProc(LPVOID lpParam)
 		{
 			DM("@" + clients[(UINT)lpParam].name + " отключился. Очень жаль...");
 			clients[(UINT)lpParam].recv = FALSE;
+			closesocket(clients[(UINT)lpParam].sock);
 			return 1;
 		}
 		DM("@" + clients[(UINT)lpParam].name + " > " + string(buffer));
@@ -284,8 +285,10 @@ DWORD WINAPI AcceptProc(LPVOID lpParam)
 		{
 			char erbuf[256] = "Клиент с таким именем уже подключен к серверу!";
 			send(client, erbuf, 256, NULL);
+			closesocket(client);
 			continue;
 		}
+		if (clid != -1) clients[clid].sock = client;
 		if (clid == -1)
 		{
 			clients.push_back(CLIENT{ name, client, TRUE });
