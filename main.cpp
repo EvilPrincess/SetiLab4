@@ -288,7 +288,11 @@ DWORD WINAPI AcceptProc(LPVOID lpParam)
 			closesocket(client);
 			continue;
 		}
-		if (clid != -1) clients[clid].sock = client;
+		if (clid != -1) 
+		{
+			clients[clid].sock = client;
+			clients[clid].recv = TRUE;
+		}
 		if (clid == -1)
 		{
 			clients.push_back(CLIENT{ name, client, TRUE });
