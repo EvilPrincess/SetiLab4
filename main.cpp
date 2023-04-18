@@ -16,6 +16,7 @@ CHAR BUFFER[BUFFERSIZE] = { };
 SOCKET client = { };
 char ip[16] = { };
 vector<string> msgStack{ };
+char name[256] = "Дядя Пётр";
 
 
 
@@ -265,6 +266,8 @@ DWORD WINAPI ClientHandler(LPVOID lpParam)
 		return 1;
 	}
 	DM("$ Успешное подключение к серверу!");
+
+	send(client, name, 256, NULL);
 
 	for (string msg : msgStack)
 	{
