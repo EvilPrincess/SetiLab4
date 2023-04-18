@@ -18,6 +18,7 @@ SOCKET client = { };
 char ip[16] = { };
 char name[256] = "default";
 vector<string> msgStack{ };
+HMENU RootMenu = { };
 
 
 
@@ -260,7 +261,7 @@ void CreateWidgets(HWND hWnd)
 }
 void CreateMenus(HWND hWnd)
 {
-	HMENU RootMenu = CreateMenu();
+	RootMenu = CreateMenu();
 
 	AppendMenuA(RootMenu, MF_STRING, OnOpenIPWndPressed, "Задать адрес назначения");
 	AppendMenuA(RootMenu, MF_STRING, OnOpenNameWndPressed, "Задать имя");
@@ -328,6 +329,8 @@ DWORD WINAPI ClientHandler(LPVOID lpParam)
 void Enter()
 {
 	if (running) return;
+	EnableMenuItem(RootMenu, OnOpenIPWndPressed, MF_GRAYED);
+	EnableMenuItem(RootMenu, OnOpenNameWndPressed, MF_GRAYED);
 	EnableWindow(EnterBtn, 0);
 	EnableWindow(ExitBtn, 1);
 	WSADATA WSAdata;
@@ -349,6 +352,8 @@ void Enter()
 void Exit(BOOL wasConnected)
 {
 	if (!running) return;
+	EnableMenuItem(RootMenu, OnOpenIPWndPressed, MF_ENABLED);
+	EnableMenuItem(RootMenu, OnOpenNameWndPressed, MF_ENABLED);
 	EnableWindow(EnterBtn, 1);
 	EnableWindow(ExitBtn, 0);
 	running = FALSE;
