@@ -33,5 +33,5 @@ void MB(string _Msg, BOOL _IsWarning = FALSE);
 void DM(string _Msg, string _End = "\r\n");
 DWORD WINAPI ClientHandler(LPVOID lpParam);
 void Enter();
-void Exit();
+void Exit(BOOL wasConnected = 1);
 void Send();

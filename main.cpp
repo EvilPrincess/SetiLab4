@@ -249,16 +249,19 @@ DWORD WINAPI ClientHandler(LPVOID lpParam)
 	addr.sin_port = htons(DEFAULT_PORT);
 	addr.sin_family = AF_INET;
 
+	DM("$ Подключение к серверу...");
 	if ((client = socket(AF_INET, SOCK_STREAM, NULL)) == SOCKET_ERROR)
 	{
 		MB("Ошибка функции socket: " + to_string(WSAGetLastError()), TRUE);
-		running = FALSE;
+		DM("$ Ошибка функции socket.");
+		Exit(0);
 		return 1;
 	}
 	if ((connect(client, (SOCKADDR*)&addr, sizeof(addr))) == SOCKET_ERROR)
 	{
-		MB("Не удалось подключиться к серверу! Ошибка функции connect: " + to_string(WSAGetLastError()), TRUE);
-		running = FALSE;
+		MB("Ошибка функции connect: " + to_string(WSAGetLastError()), TRUE);
+		DM("$ Ошибка подключения к серверу.");
+		Exit(0);
 		return 1;
 	}
 	DM("$ Успешное подключение к серверу!");
@@ -292,7 +295,7 @@ void Enter()
 		0,
 		NULL);
 }
-void Exit()
+void Exit(BOOL wasConnected)
 {
 	if (!running) return;
 	EnableWindow(EnterBtn, 1);
@@ -307,7 +310,7 @@ void Exit()
 	}
 	else
 	{
-		DM("$ Соединение разорвано.");
+		if (wasConnected) DM("$ Соединение разорвано.");
 	}
 }
 void Send()
