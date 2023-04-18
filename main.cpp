@@ -157,6 +157,15 @@ void DM(string _Msg, string _End)
 	GetWindowTextA(EditBox, BUFFER, BUFFERSIZE);
 	SetWindowTextA(EditBox, (string(BUFFER) + _Msg + _End).c_str());
 }
+string strrmv(string str, char ch) {
+	for (int i = 0; i < str.length(); i++) {
+		if (str[i] == ch) {
+			str.erase(i, 1);
+			i--;
+		}
+	}
+	return str;
+}
 //
 //		ЛАБА
 //
@@ -246,7 +255,7 @@ DWORD WINAPI ReceiveProc(LPVOID lpParam)
 			clients[(UINT)lpParam].recv = FALSE;
 			return 1;
 		}
-		DM("Клиент " + clients[(UINT)lpParam].name + " > " + string(buffer));
+		DM("@" + clients[(UINT)lpParam].name + " > " + string(buffer));
 	}
 }
 DWORD WINAPI AcceptProc(LPVOID lpParam)
@@ -260,20 +269,21 @@ DWORD WINAPI AcceptProc(LPVOID lpParam)
 			return 1;
 		}
 
-		char name[256];
-		recv(client, name, 256, NULL);
-		DM("$ " + string(name) + " присоединился!");
+		char tmpname[256];
+		recv(client, tmpname, 256, NULL);
+		string name = strrmv(string(tmpname), ' ');
+		DM("$ " + name + " присоединился!");
 		int clid = -1;
 		for (int i = 0; i < clients.size(); i++)
 		{
-			if (clients[i].name == string(name))
+			if (clients[i].name == name)
 			{
 				clid = i;
 			}
 		}
 		if (clid == -1)
 		{
-			clients.push_back(CLIENT{ string(name), client, TRUE });
+			clients.push_back(CLIENT{ name, client, TRUE });
 			clid = clients.size() - 1;
 		}
 

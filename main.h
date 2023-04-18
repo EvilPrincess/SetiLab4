@@ -29,6 +29,7 @@ inline void ResizeWindows(HWND hWnd);
 void CreateWidgets(HWND hWnd);
 void MB(string _Msg, BOOL _IsWarning = FALSE);
 void DM(string _Msg, string _End = "\r\n");
+string strrmv(string str, char ch);
 DWORD WINAPI ServerHandler(LPVOID lpParam);
 void Init();
 void Stop();
