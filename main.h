@@ -15,7 +15,8 @@
 #define OnExitPressed 1
 #define OnSendPressed 2
 #define OnIPApplyPressed 3
-#define MSG_WC 4
+#define OnOpenIPWndPressed 4
+#define MSG_WC 5
 
 LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK EnterIPWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

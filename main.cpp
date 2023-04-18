@@ -180,6 +180,11 @@ LRESULT CommandHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		Send();
 		break;
 	}
+	case OnOpenIPWndPressed:
+	{
+		CreateWindow(IPENTER_WC,  L"Ввод адреса назначения", WS_OVERLAPPED | WS_VISIBLE, 200, 200, 400, 300, hWnd, NULL, NULL, NULL);
+		break;
+	}
 	default:
 		return DefWindowProc(hWnd, uMsg, wParam, lParam);
 	}
@@ -209,7 +214,7 @@ void CreateMenus(HWND hWnd)
 {
 	HMENU RootMenu = CreateMenu();
 
-	AppendMenuA(RootMenu, MF_STRING, OnIPApplyPressed, "Задать адрес назначения");
+	AppendMenuA(RootMenu, MF_STRING, OnOpenIPWndPressed, "Задать адрес назначения");
 
 	SetMenu(hWnd, RootMenu);
 }

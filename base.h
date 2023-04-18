@@ -6,6 +6,7 @@
 #include <windows.h>
 #include <string>
 #include <vector>
+#include <tchar.h>
 
 #define DEFAULT_BUFLEN 16384
 #define DEFAULT_PORT "6881"
