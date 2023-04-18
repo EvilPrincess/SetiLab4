@@ -4,6 +4,8 @@
 
 #define MAIN_WC L"MainWndClass"
 #define IPENTER_WC L"IPEnterWndClass"
+#define MSG_WC 5
+#define IP_WC 6
 #define CLIENT_T 0
 #define BUFFERSIZE 16384
 #define DEFAULT_PORT 1111
@@ -16,7 +18,6 @@
 #define OnSendPressed 2
 #define OnIPApplyPressed 3
 #define OnOpenIPWndPressed 4
-#define MSG_WC 5
 
 LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK EnterIPWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);

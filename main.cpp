@@ -9,11 +9,14 @@ HWND EnterBtn = { };
 HWND ExitBtn = { };
 HWND SendBtn = { };
 HWND MsgBox = { };
+HWND IPENTERBOX = NULL;
 HANDLE ClientThread = { };
 BOOL running = FALSE;
 CHAR BUFFER[BUFFERSIZE] = { };
 SOCKET client = { };
+char ip[16] = { };
 vector<string> msgStack{ };
+
 
 
 //
@@ -88,7 +91,7 @@ LRESULT CALLBACK EnterIPWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 	{
 		case WM_CREATE:
 		{
-
+			IPENTERBOX = CreateWindowA("edit", ip, WS_CHILD | WS_BORDER | WS_VISIBLE, 10, 10, 160, 20, hWnd, (HMENU)IP_WC, NULL, NULL);
 			break;
 		}
 		case WM_COMMAND:
@@ -182,7 +185,8 @@ LRESULT CommandHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 	case OnOpenIPWndPressed:
 	{
-		CreateWindow(IPENTER_WC,  L"Ввод адреса назначения", WS_OVERLAPPED | WS_VISIBLE, 200, 200, 400, 300, hWnd, NULL, NULL, NULL);
+		if (IPENTERBOX == NULL)
+			CreateWindow(IPENTER_WC,  L"Ввод адреса назначения", WS_OVERLAPPED | WS_VISIBLE, 200, 200, 200, 100, hWnd, NULL, NULL, NULL);
 		break;
 	}
 	default:
