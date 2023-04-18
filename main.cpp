@@ -92,6 +92,7 @@ LRESULT CALLBACK EnterIPWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 		case WM_CREATE:
 		{
 			IPENTERBOX = CreateWindowA("edit", ip, WS_CHILD | WS_BORDER | WS_VISIBLE, 10, 10, 160, 20, hWnd, (HMENU)IP_WC, NULL, NULL);
+			CreateWindowA("button", "Подтвердить", WS_CHILD | WS_BORDER | WS_VISIBLE, 10, 40, 160, 20, hWnd, (HMENU)OnIPApplyPressed, NULL, NULL);
 			break;
 		}
 		case WM_COMMAND:
@@ -100,7 +101,9 @@ LRESULT CALLBACK EnterIPWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 			{
 				case OnIPApplyPressed:
 				{
-
+					GetWindowTextA(IPENTERBOX, ip, 16);
+					IPENTERBOX = NULL;
+					DestroyWindow(hWnd);
 					break;
 				}
 			}
@@ -186,7 +189,7 @@ LRESULT CommandHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case OnOpenIPWndPressed:
 	{
 		if (IPENTERBOX == NULL)
-			CreateWindow(IPENTER_WC,  L"Ввод адреса назначения", WS_OVERLAPPED | WS_VISIBLE, 200, 200, 200, 100, hWnd, NULL, NULL, NULL);
+			CreateWindow(IPENTER_WC,  L"Ввод адреса назначения", WS_OVERLAPPED | WS_VISIBLE, 200, 200, 200, 110, hWnd, NULL, NULL, NULL);
 		break;
 	}
 	default:
