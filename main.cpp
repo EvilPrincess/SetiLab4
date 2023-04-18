@@ -64,6 +64,7 @@ LRESULT CALLBACK MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 	case WM_CLOSE:
 	{
+		Exit();
 		PostQuitMessage(0);
 		break;
 	}
