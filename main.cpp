@@ -272,7 +272,7 @@ DWORD WINAPI AcceptProc(LPVOID lpParam)
 		char tmpname[256];
 		recv(client, tmpname, 256, NULL);
 		string name = strrmv(string(tmpname), ' ');
-		DM("$ " + name + " присоединился!");
+		DM("@" + name + " присоединился!");
 		int clid = -1;
 		for (int i = 0; i < clients.size(); i++)
 		{
