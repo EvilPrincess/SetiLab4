@@ -292,6 +292,8 @@ DWORD WINAPI AcceptProc(LPVOID lpParam)
 			clients.push_back(CLIENT{ name, client, TRUE });
 			clid = clients.size() - 1;
 		}
+		char erbuf[256] = "Успех!";
+		send(client, erbuf, 256, NULL);
 		CreateThread(
 			NULL,
 			0,
