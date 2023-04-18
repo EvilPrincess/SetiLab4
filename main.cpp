@@ -272,7 +272,6 @@ DWORD WINAPI AcceptProc(LPVOID lpParam)
 		char tmpname[256];
 		recv(client, tmpname, 256, NULL);
 		string name = strrmv(string(tmpname), ' ');
-		DM("@" + name + " присоединился!");
 		int clid = -1;
 		for (int i = 0; i < clients.size(); i++)
 		{
@@ -293,6 +292,7 @@ DWORD WINAPI AcceptProc(LPVOID lpParam)
 			clid = clients.size() - 1;
 		}
 		char erbuf[256] = "Успех!";
+		DM("@" + name + " присоединился!");
 		send(client, erbuf, 256, NULL);
 		CreateThread(
 			NULL,
