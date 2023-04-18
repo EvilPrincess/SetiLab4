@@ -251,12 +251,12 @@ DWORD WINAPI ReceiveProc(LPVOID lpParam)
 		recv(clients[(UINT)lpParam].sock, buffer, sizeof(buffer), NULL);
 		if (string(buffer) == "$ disconnect")
 		{
-			DM("@" + clients[(UINT)lpParam].name + " отключился. Очень жаль...");
+			DM("$ [" + clients[(UINT)lpParam].name + "] отключился. Очень жаль...");
 			clients[(UINT)lpParam].recv = FALSE;
 			closesocket(clients[(UINT)lpParam].sock);
 			return 1;
 		}
-		DM("@" + clients[(UINT)lpParam].name + " > " + string(buffer));
+		DM("[" + clients[(UINT)lpParam].name + "] -> " + string(buffer));
 	}
 }
 DWORD WINAPI AcceptProc(LPVOID lpParam)
@@ -272,7 +272,7 @@ DWORD WINAPI AcceptProc(LPVOID lpParam)
 
 		char tmpname[256];
 		recv(client, tmpname, 256, NULL);
-		string name = strrmv(string(tmpname), ' ');
+		string name = string(tmpname);
 		int clid = -1;
 		for (int i = 0; i < clients.size(); i++)
 		{
@@ -299,7 +299,7 @@ DWORD WINAPI AcceptProc(LPVOID lpParam)
 			clid = clients.size() - 1;
 		}
 		char erbuf[256] = "Успех!";
-		DM("@" + name + " присоединился!");
+		DM("$ [" + name + "] присоединился!");
 		send(client, erbuf, 256, NULL);
 		CreateThread(
 			NULL,
