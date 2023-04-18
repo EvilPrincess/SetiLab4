@@ -15,6 +15,8 @@ SOCKET server, client;
 SOCKADDR_IN addr;
 UINT client_id = 0;
 
+vector<CLIENT> clients;
+
 int addr_size = sizeof(addr);
 
 
@@ -159,6 +161,27 @@ void DM(string _Msg, string _End)
 //
 //		ЛАБА
 //
+void Init()
+{
+	if (running) return;
+	EnableWindow(StartBtn, 0);
+	EnableWindow(StopBtn, 1);
+	WSADATA WSAdata;
+	WORD DLLVersion = MAKEWORD(2, 1);
+	if (WSAStartup(DLLVersion, &WSAdata) != 0)
+	{
+		MB("no wsa cry :(");
+		PostQuitMessage(0);
+	}
+	running = TRUE;
+	ServerThread = CreateThread(
+		NULL,
+		0,
+		ServerHandler,
+		(LPVOID)SERVER_T,
+		0,
+		NULL);
+}
 DWORD WINAPI ServerHandler(LPVOID lpParam)
 {
 	addr.sin_addr.s_addr = inet_addr(DEFAULT_IP);
@@ -194,27 +217,6 @@ DWORD WINAPI ServerHandler(LPVOID lpParam)
 
 	return 1;
 }
-void Init()
-{
-	if (running) return;
-	EnableWindow(StartBtn, 0);
-	EnableWindow(StopBtn, 1);
-	WSADATA WSAdata;
-	WORD DLLVersion = MAKEWORD(2, 1);
-	if (WSAStartup(DLLVersion, &WSAdata) != 0)
-	{
-		MB("no wsa cry :(");
-		PostQuitMessage(0);
-	}
-	running = TRUE;
-	ServerThread = CreateThread(
-		NULL,
-		0,
-		ServerHandler,
-		(LPVOID)SERVER_T,
-		0,
-		NULL);
-}
 void Stop()
 {
 	if (!running) return;
@@ -239,13 +241,13 @@ DWORD WINAPI ReceiveProc(LPVOID lpParam)
 	char buffer[1024];
 	while(receiving)
 	{
-		recv(client, buffer, sizeof(buffer), NULL);
+		recv(clients[(UINT)lpParam].sock, buffer, sizeof(buffer), NULL);
 		if (string(buffer) == "$ disconnect")
 		{
-			DM("$ Клиент №" + to_string((UINT)lpParam) + " отключился. Очень жаль...");
+			DM("$ Клиент " + clients[(UINT)lpParam].name + " отключился. Очень жаль...");
 			return 1;
 		}
-		DM("Клиент №" + to_string((UINT)lpParam) + " > " + string(buffer));
+		DM("Клиент " + clients[(UINT)lpParam].name + " > " + string(buffer));
 	}
 }
 DWORD WINAPI AcceptProc(LPVOID lpParam)
@@ -255,19 +257,32 @@ DWORD WINAPI AcceptProc(LPVOID lpParam)
 		if ((client = accept(server, (SOCKADDR*)&addr, &addr_size)) == SOCKET_ERROR)
 		{
 			MB("Ошибка функции accept: " + to_string(WSAGetLastError()), TRUE);
-		}
-		else
-		{
-			DM("$ Новый клиент присоединился!");
+			running = FALSE;
+			return 1;
 		}
 
-		receiving = TRUE;
+		DM("$ Новый клиент присоединился!");
+		char name[256];
+		recv(client, name, 256, NULL);
+		int clid = -1;
+		for (int i = 0; i < clients.size(); i++)
+		{
+			if (clients[i].name == string(name))
+			{
+				clid = i;
+			}
+		}
+		if (clid == -1)
+		{
+			clients.push_back(CLIENT{ string(name), client, TRUE });
+			clid = clients.size() - 1;
+		}
 
 		CreateThread(
 			NULL,
 			0,
 			ReceiveProc,
-			(LPVOID)client,
+			(LPVOID)clid,
 			0,
 			NULL);
 	}

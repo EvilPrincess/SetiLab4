@@ -34,3 +34,10 @@ void Init();
 void Stop();
 DWORD WINAPI ReceiveProc(LPVOID lpParam);
 DWORD WINAPI AcceptProc(LPVOID lpParam);
+
+struct CLIENT
+{
+	string name;
+	SOCKET sock;
+	BOOL recv;
+};
