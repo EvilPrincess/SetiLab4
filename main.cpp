@@ -272,6 +272,7 @@ DWORD WINAPI ClientHandler(LPVOID lpParam)
 	{
 		DM("$ Клиент с таким именем уже подключен к серверу!");
 		Exit();
+		return 1;
 	}
 
 	DM("$ Успешное подключение к серверу!");
