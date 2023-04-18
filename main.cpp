@@ -16,7 +16,7 @@ CHAR BUFFER[BUFFERSIZE] = { };
 SOCKET client = { };
 char ip[16] = { };
 vector<string> msgStack{ };
-char name[256] = "Дядя Пётр";
+char name[256] = "ДядяПётр";
 
 
 
@@ -266,15 +266,22 @@ DWORD WINAPI ClientHandler(LPVOID lpParam)
 		Exit(0);
 		return 1;
 	}
+	send(client, name, 256, NULL);
+	recv(client, BUFFER, 256, NULL);
+	if (string(BUFFER) == "Клиент с таким именем уже подключен к серверу!")
+	{
+		DM("$ Клиент с таким именем уже подключен к серверу!");
+		Exit();
+	}
+
 	DM("$ Успешное подключение к серверу!");
 
-	send(client, name, 256, NULL);
 
-	for (string msg : msgStack)
-	{
-		send(client, msg.c_str(), sizeof(msg), NULL);
-	}
-	msgStack.clear();
+	//for (string msg : msgStack)
+	//{
+	//	send(client, msg.c_str(), sizeof(msg), NULL);
+	//}
+	//msgStack.clear();
 
 	return 1;
 }
