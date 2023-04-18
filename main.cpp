@@ -9,7 +9,6 @@ HWND StartBtn = { };
 HWND StopBtn = { };
 HANDLE ServerThread = { };
 BOOL running = FALSE;
-BOOL receiving = FALSE;
 CHAR BUFFER[BUFFERSIZE] = { };
 SOCKET server, client;
 SOCKADDR_IN addr;
@@ -223,7 +222,6 @@ void Stop()
 	EnableWindow(StartBtn, 1);
 	EnableWindow(StopBtn, 0);
 	running = FALSE;
-	receiving = FALSE;
 	closesocket(client);
 	closesocket(server);
 	if (WSACleanup() == SOCKET_ERROR)
@@ -239,12 +237,13 @@ void Stop()
 DWORD WINAPI ReceiveProc(LPVOID lpParam)
 {
 	char buffer[1024];
-	while(receiving)
+	while(clients[(UINT)lpParam].recv)
 	{
 		recv(clients[(UINT)lpParam].sock, buffer, sizeof(buffer), NULL);
 		if (string(buffer) == "$ disconnect")
 		{
 			DM("$ Клиент " + clients[(UINT)lpParam].name + " отключился. Очень жаль...");
+			clients[(UINT)lpParam].recv = FALSE;
 			return 1;
 		}
 		DM("Клиент " + clients[(UINT)lpParam].name + " > " + string(buffer));
@@ -261,9 +260,9 @@ DWORD WINAPI AcceptProc(LPVOID lpParam)
 			return 1;
 		}
 
-		DM("$ Новый клиент присоединился!");
 		char name[256];
 		recv(client, name, 256, NULL);
+		DM("$ " + string(name) + " присоединился!");
 		int clid = -1;
 		for (int i = 0; i < clients.size(); i++)
 		{
