@@ -204,6 +204,10 @@ void CreateWidgets(HWND hWnd)
 	SendBtn = CreateWindowA("button", "Отправить", WS_CHILD | WS_VISIBLE,
 		r.right - 200 + 10, r.bottom - 90, 80, 80, hWnd, (HMENU)OnSendPressed, NULL, NULL);
 }
+void CreateMenus(HWND hWnd)
+{
+	HMENU RootMenu = CreateMenu();
+}
 //
 //		ВСПОМОГАТЕЛЬНЫЕ
 //
