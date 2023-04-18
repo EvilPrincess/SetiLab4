@@ -281,12 +281,17 @@ DWORD WINAPI AcceptProc(LPVOID lpParam)
 				clid = i;
 			}
 		}
+		if (clid != -1 && clients[clid].recv)
+		{
+			char erbuf[256] = "Клиент с таким именем уже подключен к серверу!";
+			send(client, erbuf, 256, NULL);
+			continue;
+		}
 		if (clid == -1)
 		{
 			clients.push_back(CLIENT{ name, client, TRUE });
 			clid = clients.size() - 1;
 		}
-
 		CreateThread(
 			NULL,
 			0,
