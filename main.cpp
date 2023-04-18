@@ -141,7 +141,7 @@ void CreateWidgets(HWND hWnd)
 		ES_AUTOVSCROLL | WS_VSCROLL, 11, 11, r.right - 22, r.bottom - 112, hWnd, NULL, NULL, NULL);
 	StartBtn = CreateWindowA("BUTTON", "Включить", WS_CHILD | WS_VISIBLE | SS_CENTER,
 		10, r.bottom - 90, r.right / 2 - 20, 80, hWnd, (HMENU)OnStartPressed, NULL, NULL);
-	StopBtn = CreateWindowA("BUTTON", "Отключить", WS_CHILD | WS_VISIBLE | SS_CENTER,
+	StopBtn = CreateWindowA("BUTTON", "Отключить", WS_CHILD | WS_VISIBLE | WS_DISABLED | SS_CENTER,
 		r.right / 2, r.bottom - 90, r.right / 2 - 20, 80, hWnd, (HMENU)OnStopPressed, NULL, NULL);
 }
 //
@@ -197,6 +197,8 @@ DWORD WINAPI ServerHandler(LPVOID lpParam)
 void Init()
 {
 	if (running) return;
+	EnableWindow(StartBtn, 0);
+	EnableWindow(StopBtn, 1);
 	WSADATA WSAdata;
 	WORD DLLVersion = MAKEWORD(2, 1);
 	if (WSAStartup(DLLVersion, &WSAdata) != 0)
@@ -216,6 +218,8 @@ void Init()
 void Stop()
 {
 	if (!running) return;
+	EnableWindow(StartBtn, 1);
+	EnableWindow(StopBtn, 0);
 	running = FALSE;
 	receiving = FALSE;
 	closesocket(client);
@@ -263,7 +267,7 @@ DWORD WINAPI AcceptProc(LPVOID lpParam)
 			NULL,
 			0,
 			ReceiveProc,
-			(LPVOID)++client_id,
+			(LPVOID)client,
 			0,
 			NULL);
 	}
