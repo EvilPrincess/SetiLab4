@@ -103,6 +103,7 @@ LRESULT CALLBACK EnterIPWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 				{
 					GetWindowTextA(IPENTERBOX, ip, 16);
 					IPENTERBOX = NULL;
+					EnableWindow(EnterBtn, 1);
 					DestroyWindow(hWnd);
 					break;
 				}
@@ -210,9 +211,9 @@ void CreateWidgets(HWND hWnd)
 		ES_AUTOVSCROLL | WS_VSCROLL, 11, 11, r.right - 22, r.bottom - 112, hWnd, NULL, NULL, NULL);
 	MsgBox = CreateWindowA("EDIT", "Введите сообщение...", WS_CHILD | WS_VISIBLE | ES_MULTILINE,
 		11, r.bottom - 89, r.right - 120 - 100 + 10 - 2, 80 - 2, hWnd, (HMENU)MSG_WC, NULL, NULL);
-	EnterBtn = CreateWindowA("button", "Войти", WS_CHILD | WS_VISIBLE,
+	EnterBtn = CreateWindowA("button", "Войти", WS_CHILD | WS_VISIBLE | WS_DISABLED,
 		r.right - 100, r.bottom - 90, 80, 35, hWnd, (HMENU)OnEnterPressed, NULL, NULL);
-	ExitBtn = CreateWindowA("button", "Выйти", WS_CHILD | WS_VISIBLE,
+	ExitBtn = CreateWindowA("button", "Выйти", WS_CHILD | WS_VISIBLE | WS_DISABLED,
 		r.right - 100, r.bottom - 90 + 40, 80, 35, hWnd, (HMENU)OnExitPressed, NULL, NULL);
 	SendBtn = CreateWindowA("button", "Отправить", WS_CHILD | WS_VISIBLE,
 		r.right - 200 + 10, r.bottom - 90, 80, 80, hWnd, (HMENU)OnSendPressed, NULL, NULL);
@@ -244,7 +245,7 @@ DWORD WINAPI ClientHandler(LPVOID lpParam)
 {
 	SOCKADDR_IN addr;
 	int size = sizeof(addr);
-	addr.sin_addr.s_addr = inet_addr(DEFAULT_IP);
+	addr.sin_addr.s_addr = inet_addr(ip);
 	addr.sin_port = htons(DEFAULT_PORT);
 	addr.sin_family = AF_INET;
 
@@ -271,6 +272,8 @@ DWORD WINAPI ClientHandler(LPVOID lpParam)
 void Enter()
 {
 	if (running) return;
+	EnableWindow(EnterBtn, 0);
+	EnableWindow(ExitBtn, 1);
 	WSADATA WSAdata;
 	WORD DLLVersion = MAKEWORD(2, 1);
 	if (WSAStartup(DLLVersion, &WSAdata) != 0)
@@ -290,6 +293,8 @@ void Enter()
 void Exit()
 {
 	if (!running) return;
+	EnableWindow(EnterBtn, 1);
+	EnableWindow(ExitBtn, 0);
 	running = FALSE;
 	char buf[] = "$ disconnect";
 	send(client, buf, sizeof(buf), NULL);
