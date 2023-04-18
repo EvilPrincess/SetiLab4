@@ -187,6 +187,7 @@ LRESULT CommandHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 void OnMainWindowCreated(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	DrawClient(hWnd);
+	CreateMenus(hWnd);
 	CreateWidgets(hWnd);
 }
 void CreateWidgets(HWND hWnd)
@@ -207,6 +208,10 @@ void CreateWidgets(HWND hWnd)
 void CreateMenus(HWND hWnd)
 {
 	HMENU RootMenu = CreateMenu();
+
+	AppendMenuA(RootMenu, MF_STRING, OnIPApplyPressed, "Задать адрес назначения");
+
+	SetMenu(hWnd, RootMenu);
 }
 //
 //		ВСПОМОГАТЕЛЬНЫЕ
