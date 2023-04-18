@@ -251,7 +251,7 @@ DWORD WINAPI ReceiveProc(LPVOID lpParam)
 		recv(clients[(UINT)lpParam].sock, buffer, sizeof(buffer), NULL);
 		if (string(buffer) == "$ disconnect")
 		{
-			DM("$ Клиент " + clients[(UINT)lpParam].name + " отключился. Очень жаль...");
+			DM("$ @" + clients[(UINT)lpParam].name + " отключился. Очень жаль...");
 			clients[(UINT)lpParam].recv = FALSE;
 			return 1;
 		}
