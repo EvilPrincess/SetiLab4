@@ -10,13 +10,14 @@ HWND ExitBtn = { };
 HWND SendBtn = { };
 HWND MsgBox = { };
 HWND IPENTERBOX = NULL;
+HWND NAMEENTERBOX = NULL;
 HANDLE ClientThread = { };
 BOOL running = FALSE;
 CHAR BUFFER[BUFFERSIZE] = { };
 SOCKET client = { };
 char ip[16] = { };
+char name[256] = "default";
 vector<string> msgStack{ };
-char name[256] = "ДядяПётр";
 
 
 
@@ -29,9 +30,12 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR args, int ncmdsho
 		LoadIcon(NULL, IDI_QUESTION), MAIN_WC, MainWndProc);
 	WNDCLASS EnterIPWndClass = NewWindowClass((HBRUSH)COLOR_WINDOW, LoadCursor(NULL, IDC_ARROW), hInst,
 		LoadIcon(NULL, IDI_QUESTION), IPENTER_WC, EnterIPWndProc);
+	WNDCLASS EnterNameWndClass = NewWindowClass((HBRUSH)COLOR_WINDOW, LoadCursor(NULL, IDC_ARROW), hInst,
+		LoadIcon(NULL, IDI_QUESTION), NAMEENTER_WC, EnterNameWndProc);
 
 	if (!RegisterClassW(&MainWndClass)) { return -1; }
 	if (!RegisterClassW(&EnterIPWndClass)) { return -1; }
+	if (!RegisterClassW(&EnterNameWndClass)) { return -1; }
 
 	MSG MainWndMessage = { };
 
@@ -116,6 +120,34 @@ LRESULT CALLBACK EnterIPWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);
 	}
 }
+LRESULT CALLBACK EnterNameWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch (uMsg)
+	{
+	case WM_CREATE:
+	{
+		NAMEENTERBOX = CreateWindowA("edit", name, WS_CHILD | WS_BORDER | WS_VISIBLE, 10, 10, 160, 20, hWnd, NULL, NULL, NULL);
+		CreateWindowA("button", "Подтвердить", WS_CHILD | WS_BORDER | WS_VISIBLE, 10, 40, 160, 20, hWnd, (HMENU)OnNameApplyPressed, NULL, NULL);
+		break;
+	}
+	case WM_COMMAND:
+	{
+		switch (wParam)
+		{
+		case OnNameApplyPressed:
+		{
+			GetWindowTextA(NAMEENTERBOX, name, 16);
+			NAMEENTERBOX = NULL;
+			DestroyWindow(hWnd);
+			break;
+		}
+		}
+		break;
+	}
+	default:
+		return DefWindowProc(hWnd, uMsg, wParam, lParam);
+	}
+}
 inline void OnResize(HWND hWnd)
 {
 	ResizeWindows(hWnd);
@@ -195,6 +227,12 @@ LRESULT CommandHandler(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			CreateWindow(IPENTER_WC,  L"Ввод адреса назначения", WS_OVERLAPPED | WS_VISIBLE, 200, 200, 200, 110, hWnd, NULL, NULL, NULL);
 		break;
 	}
+	case OnOpenNameWndPressed:
+	{
+		if (NAMEENTERBOX == NULL)
+			CreateWindow(NAMEENTER_WC, L"Ввод имени", WS_OVERLAPPED | WS_VISIBLE, 200, 200, 200, 110, hWnd, NULL, NULL, NULL);
+		break;
+	}
 	default:
 		return DefWindowProc(hWnd, uMsg, wParam, lParam);
 	}
@@ -225,6 +263,7 @@ void CreateMenus(HWND hWnd)
 	HMENU RootMenu = CreateMenu();
 
 	AppendMenuA(RootMenu, MF_STRING, OnOpenIPWndPressed, "Задать адрес назначения");
+	AppendMenuA(RootMenu, MF_STRING, OnOpenNameWndPressed, "Задать имя");
 
 	SetMenu(hWnd, RootMenu);
 }
